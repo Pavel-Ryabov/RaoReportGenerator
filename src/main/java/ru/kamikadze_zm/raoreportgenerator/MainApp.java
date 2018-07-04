@@ -3,8 +3,11 @@ package ru.kamikadze_zm.raoreportgenerator;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.stage.Stage;
+import ru.kamikadze_zm.raoreportgenerator.settings.Settings;
 
 public class MainApp extends Application {
+
+    public static final Settings SETTINGS = Settings.load();
 
     @Override
     public void start(Stage stage) throws Exception {
