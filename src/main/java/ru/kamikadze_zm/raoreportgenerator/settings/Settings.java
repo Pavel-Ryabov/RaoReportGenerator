@@ -147,6 +147,10 @@ public class Settings implements Serializable {
     }
 
     public void save() {
+        File outputDir = new File(getOutputDir());
+        if (outputDir.isDirectory() && !outputDir.exists()) {
+            outputDir.mkdirs();
+        }
         File f = new File(SETTINGS_PATH);
         if (!f.exists()) {
             f.getParentFile().mkdirs();
