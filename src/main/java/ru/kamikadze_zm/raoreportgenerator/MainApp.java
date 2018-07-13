@@ -1,5 +1,6 @@
 package ru.kamikadze_zm.raoreportgenerator;
 
+import java.io.File;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.application.HostServices;
@@ -16,10 +17,16 @@ public class MainApp extends Application {
 
     public static final Settings SETTINGS = Settings.load();
 
+    private static final String DENIED_WRITE_ACCESS_MESSAGE = "Отсутствуют права на запись в папку: ";
+
     private static HostServices hostServices;
 
     @Override
     public void start(Stage stage) throws Exception {
+        File appDir = new File(Settings.APP_DIR);
+        if (!appDir.exists()) {
+            appDir.mkdirs();
+        }
         hostServices = getHostServices();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Main.fxml"));
@@ -32,6 +39,17 @@ public class MainApp extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
+    }
+
+    public static void showWriteAccessMessages() {
+        if (!SETTINGS.canWriteToInputDir()) {
+            MainApp.showMessage("Ошибка", DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getInputDir()
+                    + ". Плей репорты из этой папки обработаны не будут" + Settings.APP_DIR, AlertType.WARNING);
+        }
+        if (!SETTINGS.canWriteToOutputDir()) {
+            MainApp.showMessage("Ошибка", DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getOutputDir()
+                    + ". Будет установлена папка приложения: " + Settings.APP_DIR, AlertType.WARNING);
+        }
     }
 
     public static void showErrorAndExit(String message) {

@@ -85,11 +85,7 @@ public class ProcessController implements Initializable {
         }
 
         if (moviesInfo) {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Выберите сетку СТП");
-            FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX", "*.xlsx");
-            fileChooser.getExtensionFilters().add(extFilter);
-            File stpGrid = fileChooser.showOpenDialog(stage);
+            File stpGrid = showFileChooser("Выберите сетку СТП");
 
             if (stpGrid == null) {
                 MainApp.showErrorAndExit("Файл не выбран");
@@ -120,6 +116,7 @@ public class ProcessController implements Initializable {
 
         if (playreports) {
             DirectoryChooser directoryChooser = new DirectoryChooser();
+            directoryChooser.setInitialDirectory(getInputDir());
             directoryChooser.setTitle("Выберите папку с плэй репортами");
             File playReportsDir = directoryChooser.showDialog(stage);
 
@@ -232,6 +229,7 @@ public class ProcessController implements Initializable {
     private File showFileChooser(String title) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle(title);
+        fileChooser.setInitialDirectory(getInputDir());
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX", "*.xlsx");
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser.showOpenDialog(stage);
@@ -315,5 +313,14 @@ public class ProcessController implements Initializable {
     private boolean combineIsCompleted() {
         return !combine || combineComplete;
 
+    }
+
+    private File getInputDir() {
+        String inputDir = MainApp.SETTINGS.getInputDir();
+        File f = new File(inputDir);
+        if (!f.exists()) {
+            f = new File("");
+        }
+        return f;
     }
 }

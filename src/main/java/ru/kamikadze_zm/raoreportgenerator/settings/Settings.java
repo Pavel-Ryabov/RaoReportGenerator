@@ -21,8 +21,10 @@ public class Settings implements Serializable {
 
     private static final Logger LOG = LogManager.getLogger(Settings.class);
 
-    private static final String SETTINGS_PATH = System.getProperty("user.home") + File.separator
-            + "documents" + File.separator + "RaoReportGenerator" + File.separator + "settings.rrgs";
+    public static final String APP_DIR = System.getProperty("user.home") + File.separator
+            + "documents" + File.separator + "RaoReportGenerator" + File.separator;
+    private static final String SETTINGS_PATH = APP_DIR + "settings.rrgs";
+    private static final String EXCLUSIONS_PATH = APP_DIR + "playreports-exclusions.txt";
 
     private static final String DEFAULT_OUTPUT_DIR = "";
     private static final String DEFAULT_MOVIES_INFO_FILE = "movies-info";
@@ -33,22 +35,25 @@ public class Settings implements Serializable {
 
     private static final String EXCEL_EXT = ".xlsx";
 
+    private String inputDir;
     private String outputDir;
     private String moviesInfoFile;
     private String playReportsFile;
     private String raoFile;
-    private List<String> playReportsExclusions;
+    private transient List<String> playReportsExclusions;
     private StpSettings stpSettings;
 
     public Settings() {
     }
 
-    public Settings(String outputDir,
+    public Settings(String inputDir,
+            String outputDir,
             String moviesInfoFile,
             String playReportsFile,
             String raoFile,
             List<String> playReportsExclusions,
             StpSettings stpSettings) {
+        this.inputDir = inputDir;
         this.outputDir = outputDir;
         this.moviesInfoFile = moviesInfoFile;
         this.playReportsFile = playReportsFile;
@@ -65,6 +70,24 @@ public class Settings implements Serializable {
         return EXCEL_EXT;
     }
 
+    public String getInputDir() {
+        if (inputDir != null) {
+            return inputDir;
+        }
+        return getJarDirectory();
+    }
+
+    public void setInputDir(String inputDir) {
+        if (!inputDir.endsWith(File.separator)) {
+            inputDir = inputDir + File.separator;
+        }
+        this.inputDir = inputDir;
+    }
+
+    public boolean canWriteToInputDir() {
+        return new File(getInputDir()).canWrite();
+    }
+
     public String getOutputDir() {
         if (outputDir != null) {
             return outputDir;
@@ -77,6 +100,10 @@ public class Settings implements Serializable {
             outputDir = outputDir + File.separator;
         }
         this.outputDir = outputDir;
+    }
+
+    public boolean canWriteToOutputDir() {
+        return new File(getOutputDir()).canWrite();
     }
 
     public String getMoviesInfoFile() {
@@ -160,18 +187,28 @@ public class Settings implements Serializable {
         } catch (Exception e) {
             LOG.warn("Save settings exception: ", e);
         }
+        PlayReportsExclusions.write(playReportsExclusions, EXCLUSIONS_PATH);
+    }
+
+    private void loadPlayReportsExclusions() {
+        this.playReportsExclusions = PlayReportsExclusions.read(EXCLUSIONS_PATH);
     }
 
     public static Settings load() {
         File f = new File(SETTINGS_PATH);
+        Settings settings = null;
         if (f.exists()) {
             try (ObjectInputStream oos = new ObjectInputStream(new FileInputStream(SETTINGS_PATH))) {
-                return (Settings) oos.readObject();
+                settings = (Settings) oos.readObject();
             } catch (IOException | ClassNotFoundException e) {
                 LOG.warn("Load settings exception: ", e);
             }
         }
-        return new Settings();
+        if (settings == null) {
+            settings = new Settings();
+        }
+        settings.loadPlayReportsExclusions();
+        return settings;
     }
 
     private static String getJarDirectory() {

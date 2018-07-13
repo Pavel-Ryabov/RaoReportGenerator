@@ -101,6 +101,10 @@ public class PlayReportsParser {
             return;
         }
 
+        if (!file.canWrite()) {
+            return;
+        }
+
         try (RandomAccessFile accessFile = new RandomAccessFile(file, "rw")) {
             accessFile.seek(accessFile.length() - 8);
             byte[] bytes = new byte[8];

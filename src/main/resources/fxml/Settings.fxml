@@ -18,34 +18,40 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Путь к папке в которую сохраняются результаты:" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="20.0">
+                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Путь к папке, которая открывается для выбора входных данных:" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="10.0">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Название файла с результатами кинопоиска (без расширения):" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="71.0">
+                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Путь к папке в которую сохраняются результаты:" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="51.0">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Название файла с данными плей репортов (без расширения):" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="122.0">
+                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Название файла с результатами кинопоиска (без расширения):" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="92.0">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Название файла с результатами объединения (без расширения):" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="173.0">
+                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Название файла с данными плей репортов (без расширения):" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="133.0">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Label>
-                        <ListView fx:id="lvExclusions" layoutX="20.0" layoutY="295.0" prefHeight="175.0" prefWidth="890.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+                        <Label alignment="CENTER_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="450.0" text="Название файла с результатами объединения (без расширения):" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="174.0">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Label>
+                        <ListView fx:id="lvExclusions" layoutX="20.0" layoutY="295.0" prefHeight="180.0" prefWidth="890.0" AnchorPane.bottomAnchor="60.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
                         <Button mnemonicParsing="false" onAction="#addExclusion" prefHeight="31.0" prefWidth="79.0" text="Добавить" AnchorPane.bottomAnchor="20.0" AnchorPane.rightAnchor="20.0" />
-                        <TextField fx:id="outputDir" layoutX="490.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
-                        <TextField fx:id="movieInfoFile" layoutX="490.0" layoutY="91.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="71.0" />
-                        <TextField fx:id="playReportsFile" layoutX="490.0" layoutY="137.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="122.0" />
-                        <TextField fx:id="raoFile" layoutX="490.0" layoutY="183.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="173.0" />
+                        <TextField fx:id="inputDir" layoutX="470.0" layoutY="5.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="10.0" />
+                        <TextField fx:id="outputDir" layoutX="490.0" layoutY="26.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="51.0" />
+                        <TextField fx:id="movieInfoFile" layoutX="490.0" layoutY="91.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="92.0" />
+                        <TextField fx:id="playReportsFile" layoutX="490.0" layoutY="137.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="133.0" />
+                        <TextField fx:id="raoFile" layoutX="490.0" layoutY="183.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="31.0" prefWidth="420.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="174.0" />
                         <TextField fx:id="exclusion" prefHeight="31.0" prefWidth="796.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" />
-                        <TextArea editable="false" layoutX="20.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="106.0" prefWidth="890.0" text="Исключения для плей репортов.&#10;Исключение проверяется методом contains. В одной строке через | можно указать что не должно входить (not contains)&#10;Пример: 6+ - тут исключением будет и 6+ и 16+&#10;Пример: 6+ | 16+ - тут исключением будет только 6+&#10;" AnchorPane.bottomAnchor="235.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
+                        <TextArea editable="false" layoutX="20.0" layoutY="189.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="106.0" prefWidth="890.0" text="Исключения для плей репортов.&#10;Исключение проверяется методом contains. В одной строке через | можно указать что не должно входить (not contains)&#10;Пример: 6+ - тут исключением будет и 6+ и 16+&#10;Пример: 6+ | 16+ - тут исключением будет только 6+&#10;" AnchorPane.bottomAnchor="240.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" />
                         <Hyperlink layoutX="26.0" layoutY="250.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onAction="#aboutContains" prefHeight="28.0" prefWidth="249.0" text="Подробнее про метод contains..." AnchorPane.bottomAnchor="240.0" AnchorPane.leftAnchor="24.0">
                            <font>
                               <Font name="Segoe UI" size="15.0" />
