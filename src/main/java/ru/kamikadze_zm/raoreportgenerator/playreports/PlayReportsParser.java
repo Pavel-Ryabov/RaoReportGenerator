@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
@@ -45,6 +46,7 @@ public class PlayReportsParser {
     private List<PlayReportMovie> movies;
     private Map<PlayReportMovie, PlayReportMovie> moviesMap;
     private List<String> errors;
+    private String ignoredMovies;
 
     private DocumentBuilder documentBuilder;
     private XPathExpression itemExpression;
@@ -76,6 +78,23 @@ public class PlayReportsParser {
         Collections.sort(moviesList);
         this.movies = moviesList;
         moviesMap = null;
+
+        StringBuilder sb = new StringBuilder("");
+        boolean first = true;
+        Iterator<PlayReportMovie> iterator = this.movies.iterator();
+        while (iterator.hasNext()) {
+            PlayReportMovie prm = iterator.next();
+            if (prm.getDateTime().length() > 30000) {
+                if (!first) {
+                    sb.append(", ");
+                } else {
+                    first = false;
+                }
+                sb.append(prm.getMovieName());
+                iterator.remove();
+            }
+        }
+        this.ignoredMovies = sb.toString();
     }
 
     public List<PlayReportMovie> getMovies() {
@@ -87,6 +106,10 @@ public class PlayReportsParser {
             return Collections.emptyList();
         }
         return errors;
+    }
+
+    public String getIgnoredMovies() {
+        return ignoredMovies;
     }
 
     private void addMoviesToMapFromXml(File file) {

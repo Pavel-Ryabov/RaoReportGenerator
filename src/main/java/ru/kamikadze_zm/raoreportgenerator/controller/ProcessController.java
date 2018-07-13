@@ -130,6 +130,9 @@ public class ProcessController implements Initializable {
                         if (!prp.getErrors().isEmpty()) {
                             errors.addAll(prp.getErrors());
                         }
+                        if (!prp.getIgnoredMovies().isEmpty()) {
+                            errors.add("Из-за слишком многих выходов были пропущены следующие файлы: " + prp.getIgnoredMovies());
+                        }
                         return prp.getMovies();
                     }
                 };
