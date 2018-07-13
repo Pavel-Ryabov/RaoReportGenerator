@@ -8,6 +8,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
@@ -85,7 +86,7 @@ public class Settings implements Serializable {
     }
 
     public boolean canWriteToInputDir() {
-        return new File(getInputDir()).canWrite();
+        return canWrite(getInputDir());
     }
 
     public String getOutputDir() {
@@ -103,7 +104,7 @@ public class Settings implements Serializable {
     }
 
     public boolean canWriteToOutputDir() {
-        return new File(getOutputDir()).canWrite();
+        return canWrite(getOutputDir());
     }
 
     public String getMoviesInfoFile() {
@@ -192,6 +193,10 @@ public class Settings implements Serializable {
 
     private void loadPlayReportsExclusions() {
         this.playReportsExclusions = PlayReportsExclusions.read(EXCLUSIONS_PATH);
+    }
+
+    private boolean canWrite(String path) {
+        return Files.isWritable(new File(path).toPath());
     }
 
     public static Settings load() {

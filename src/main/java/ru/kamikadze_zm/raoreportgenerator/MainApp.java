@@ -17,6 +17,7 @@ public class MainApp extends Application {
 
     public static final Settings SETTINGS = Settings.load();
 
+    private static final String DENIED_WRITE_ACCESS_TITLE = "Предупреждение";
     private static final String DENIED_WRITE_ACCESS_MESSAGE = "Отсутствуют права на запись в папку: ";
 
     private static HostServices hostServices;
@@ -44,11 +45,11 @@ public class MainApp extends Application {
 
     public static void showWriteAccessMessages() {
         if (!SETTINGS.canWriteToInputDir()) {
-            MainApp.showMessage("Ошибка", DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getInputDir()
-                    + ". Плей репорты из этой папки обработаны не будут" + Settings.APP_DIR, AlertType.WARNING);
+            MainApp.showMessage(DENIED_WRITE_ACCESS_TITLE, DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getInputDir()
+                    + ". Плей репорты из этой папки обработаны не будут", AlertType.WARNING);
         }
         if (!SETTINGS.canWriteToOutputDir()) {
-            MainApp.showMessage("Ошибка", DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getOutputDir()
+            MainApp.showMessage(DENIED_WRITE_ACCESS_TITLE, DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getOutputDir()
                     + ". Будет установлена папка приложения: " + Settings.APP_DIR, AlertType.WARNING);
             SETTINGS.setOutputDir(Settings.APP_DIR);
         }
