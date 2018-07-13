@@ -27,6 +27,7 @@ public class MainApp extends Application {
         if (!appDir.exists()) {
             appDir.mkdirs();
         }
+        showWriteAccessMessages();
         hostServices = getHostServices();
 
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Main.fxml"));
@@ -49,6 +50,7 @@ public class MainApp extends Application {
         if (!SETTINGS.canWriteToOutputDir()) {
             MainApp.showMessage("Ошибка", DENIED_WRITE_ACCESS_MESSAGE + SETTINGS.getOutputDir()
                     + ". Будет установлена папка приложения: " + Settings.APP_DIR, AlertType.WARNING);
+            SETTINGS.setOutputDir(Settings.APP_DIR);
         }
     }
 

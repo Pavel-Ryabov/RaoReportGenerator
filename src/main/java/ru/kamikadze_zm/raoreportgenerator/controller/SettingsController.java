@@ -176,9 +176,6 @@ public class SettingsController implements Initializable {
         );
         s.setStpSettings(stpSettings);
         MainApp.showWriteAccessMessages();
-        if (!s.canWriteToOutputDir()) {
-            s.setOutputDir(Settings.APP_DIR);
-        }
         
         s.save();
         closeWindow();
