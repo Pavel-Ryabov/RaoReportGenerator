@@ -3,6 +3,7 @@ package ru.kamikadze_zm.raoreportgenerator.rao;
 import ru.kamikadze_zm.raoreportgenerator.MoviesInfoExcel;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import ru.kamikadze_zm.raoreportgenerator.ExcelException;
 import ru.kamikadze_zm.raoreportgenerator.MainApp;
@@ -22,6 +23,8 @@ public class Combiner {
         if (moviesInfo.isEmpty() || playReportMovies.isEmpty()) {
             return;
         }
+        List<MovieInfo> sortedMoviesInfo = new ArrayList<>(moviesInfo);
+        Collections.sort(sortedMoviesInfo, MovieInfo::compareForCombiner);
         List<MovieInfo> combinedInfo = new ArrayList<>();
 
         String replaceRegEx = "[ _\\-.]";
@@ -31,7 +34,7 @@ public class Combiner {
             String reportMovieName = prm.getMovieName().replaceAll(replaceRegEx, "").toLowerCase();
             String stpFilmName;
             founded = null;
-            for (MovieInfo mi : moviesInfo) {
+            for (MovieInfo mi : sortedMoviesInfo) {
                 stpFilmName = mi.getName().replaceAll(replaceRegEx, "").toLowerCase();
                 if (reportMovieName.startsWith(stpFilmName)) {
                     founded = mi;

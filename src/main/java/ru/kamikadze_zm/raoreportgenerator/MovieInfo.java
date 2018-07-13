@@ -200,6 +200,24 @@ public class MovieInfo implements Comparable<MovieInfo> {
         return r;
     }
 
+    public int compareForCombiner(MovieInfo o) {
+        Character c1 = Character.toUpperCase(getName().charAt(0));
+        Character c2 = Character.toUpperCase(o.getName().charAt(0));
+        int r = c1.compareTo(c2);
+        if (r == 0) {
+            int l1 = getName().length();
+            int l2 = o.getName().length();
+            if (l1 == l2) {
+                return 0;
+            } else if (l1 > l2) {
+                return -1;
+            } else {
+                return 1;
+            }
+        }
+        return r;
+    }
+
     @Override
     public int hashCode() {
         int hash = 5;
