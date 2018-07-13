@@ -16,9 +16,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 public class PlayReportsExclusions {
-
+    
     private static final Logger LOG = LogManager.getLogger(PlayReportsExclusions.class);
-
+    
     private static final String DEFAULT_FILE_PATH = "/default-playreports-exclusions.txt";
 
     /**
@@ -37,7 +37,7 @@ public class PlayReportsExclusions {
         }
         return read(PlayReportsExclusions.class.getResourceAsStream(DEFAULT_FILE_PATH));
     }
-
+    
     private static List<String> read(InputStream in) {
         List<String> exclusions = new ArrayList<>();
         try (BufferedReader br = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
@@ -53,12 +53,13 @@ public class PlayReportsExclusions {
         }
         return exclusions;
     }
-
+    
     public static void write(List<String> exclusions, String filePath) {
         if (exclusions != null && !exclusions.isEmpty()) {
             try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(filePath), StandardCharsets.UTF_8)) {
                 for (String e : exclusions) {
                     writer.write(e);
+                    writer.write(System.lineSeparator());
                 }
             } catch (IOException e) {
                 LOG.warn("Cannot write exclusions to file", e);
