@@ -213,8 +213,12 @@ public class Settings implements Serializable {
 
     private static String getJarDirectory() {
         try {
-            return new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI())
-                    .getParentFile().getAbsolutePath() + File.separator;
+            String path = new File(Settings.class.getProtectionDomain().getCodeSource().getLocation().toURI())
+                    .getParentFile().getAbsolutePath();
+            if (!path.endsWith(File.separator)) {
+                path = path + File.separator;
+            }
+            return path;
         } catch (URISyntaxException e) {
             return DEFAULT_OUTPUT_DIR;
         }
