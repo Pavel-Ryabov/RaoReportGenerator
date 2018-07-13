@@ -19,6 +19,9 @@ public class Combiner {
     }
 
     public static void combine(List<MovieInfo> moviesInfo, List<PlayReportMovie> playReportMovies) throws ExcelException {
+        if (moviesInfo.isEmpty() || playReportMovies.isEmpty()) {
+            return;
+        }
         List<MovieInfo> combinedInfo = new ArrayList<>();
 
         String replaceRegEx = "[ _\\-.]";

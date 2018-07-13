@@ -17,9 +17,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import ru.kamikadze_zm.raoreportgenerator.ExcelException;
-import ru.kamikadze_zm.raoreportgenerator.MainApp;
-import ru.kamikadze_zm.raoreportgenerator.MovieInfo;
 
 public class MoviesInfoExcel {
 
@@ -102,6 +99,9 @@ public class MoviesInfoExcel {
      * @throws ExcelException в случае ошибки сохранения результатов в excel
      */
     public static void save(List<MovieInfo> moviesInfo, String filePath, boolean kinopoiskMovieInfo) throws ExcelException {
+        if (moviesInfo.isEmpty()) {
+            return;
+        }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
 

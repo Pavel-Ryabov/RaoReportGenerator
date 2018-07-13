@@ -72,6 +72,9 @@ public class ExcelPlayReports {
     }
 
     public static void save(List<PlayReportMovie> movies) throws ExcelException {
+        if (movies.isEmpty()) {
+            return;
+        }
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet();
 
