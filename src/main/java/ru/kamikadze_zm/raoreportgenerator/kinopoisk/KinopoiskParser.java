@@ -229,9 +229,7 @@ public class KinopoiskParser {
         String name = e.textNodes().get(0).text().trim();
 
         if (!m.getName().equalsIgnoreCase(name)) {
-            m.addNotFound(NotFound.MOVIE);
-            loadNextMovie();
-            return;
+            m.addNotFound(NotFound.CANDIDATE);
         }
 
         m.setLink(location);

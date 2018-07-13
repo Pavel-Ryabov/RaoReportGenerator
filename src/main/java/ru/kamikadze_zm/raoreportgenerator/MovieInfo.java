@@ -236,6 +236,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
     public static enum NotFound {
 
         MOVIE("Не найден фильм"),
+        CANDIDATE("Найден кандидат"),
         DIRECTOR("Не найден режиссер"),
         COMPOSER("Не найден композитор"),
         STUDIO("Не найдена киностудия"),
