@@ -32,7 +32,7 @@ public class Settings implements Serializable {
     private static final String DEFAULT_PLAYREPORTS_FILE = "play-reports";
     private static final String DEFAULT_RAO_FILE = "rao";
 
-    private static final String DATE = new SimpleDateFormat("yyyy-MM-dd HH-mm").format(new Date());
+    private static final String DATE = new SimpleDateFormat("yyyy-MM-dd HH-mm-ss_").format(new Date());
 
     private static final String EXCEL_EXT = ".xlsx";
 
