@@ -3,16 +3,15 @@ package ru.kamikadze_zm.raoreportgenerator.playreports;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import java.util.TimeZone;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import ru.kamikadze_zm.onair.command.parameter.Duration;
 
 public class PlayReportMovie implements Comparable<PlayReportMovie> {
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final Logger LOG = LogManager.getLogger(PlayReportMovie.class);
 
-    static {
-        DATE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-    }
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private String file;
     private Duration duration;
@@ -121,6 +120,9 @@ public class PlayReportMovie implements Comparable<PlayReportMovie> {
     }
 
     private static String formatDateTime(Date date, Duration time) {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Input date = {}, input time = {}, output datetime = {}", date, time, DATE_FORMAT.format(date.getTime() + time.getDuration()));
+        }
         return DATE_FORMAT.format(date.getTime() + time.getDuration());
     }
 }
