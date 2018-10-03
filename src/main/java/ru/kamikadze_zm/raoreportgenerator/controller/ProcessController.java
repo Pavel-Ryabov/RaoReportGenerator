@@ -29,7 +29,7 @@ import ru.kamikadze_zm.raoreportgenerator.playreports.PlayReportMovie;
 import ru.kamikadze_zm.raoreportgenerator.playreports.PlayReportsParser;
 import ru.kamikadze_zm.raoreportgenerator.rao.Combiner;
 import ru.kamikadze_zm.raoreportgenerator.MoviesInfoExcel;
-import stp.StpGridParser;
+import ru.kamikadze_zm.raoreportgenerator.stp.StpGridParser;
 
 public class ProcessController implements Initializable {
 

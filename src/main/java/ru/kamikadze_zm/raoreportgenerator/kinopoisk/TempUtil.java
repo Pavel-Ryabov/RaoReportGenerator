@@ -26,7 +26,7 @@ public class TempUtil {
         Gson gson = new Gson();
         String json = gson.toJson(movieInfo);
         File file = new File(FILE_PATH);
-        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+        try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file, true), StandardCharsets.UTF_8)) {
             writer.write(json);
             writer.write(System.lineSeparator());
         } catch (IOException e) {

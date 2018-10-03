@@ -1,4 +1,4 @@
-package stp;
+package ru.kamikadze_zm.raoreportgenerator.stp;
 
 import java.io.File;
 import java.io.IOException;
