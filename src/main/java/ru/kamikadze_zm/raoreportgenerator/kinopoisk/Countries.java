@@ -38,7 +38,9 @@ public class Countries {
 
     public Integer getCountryId(String countryName) {
         String firstCountry = countryName.split(",")[0].trim().toLowerCase();
-        LOG.info("Input country: {}, first country: {}", countryName, firstCountry);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Input country: {}, first country: {}", countryName, firstCountry);
+        }
         return countries.get(firstCountry);
     }
 }

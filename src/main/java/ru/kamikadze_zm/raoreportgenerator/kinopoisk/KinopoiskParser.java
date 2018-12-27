@@ -34,6 +34,7 @@ public class KinopoiskParser {
     private static final Logger LOG = LogManager.getLogger(KinopoiskParser.class);
 
     private static final String HOST = "https://www.kinopoisk.ru";
+    private static final String ENCODING = "cp1251";
 
     private static final Pattern FILM_PATTERN = Pattern.compile("film/.+");
     private static final String CAPTCHA = "showcaptcha";
@@ -166,6 +167,7 @@ public class KinopoiskParser {
             waitTimer.cancel();
         }
         waitTimer = new Timer(true);
+        LOG.info("Start timer. Url - {}, waiting = {}", url, waitMs);
         waitTimer.schedule(new WaitingTask(this, url), waitMs);
     }
 
@@ -214,7 +216,7 @@ public class KinopoiskParser {
         LOG.info("Film");
     }
 
-    private void parseFilm(Document d, MovieInfo m) {// throws ParseKinopoiskException {
+    private void parseFilm(Document d, MovieInfo m) {
         String location = d.getDocumentURI();
 
         if (checkCaptcha(location, m)) {
@@ -256,8 +258,14 @@ public class KinopoiskParser {
         }
 
         Element menu = jDoc.getElementById("newMenuSub");
-        Element liStudio = (Element) menu.childNodes().get(15);
-        if (liStudio.hasClass("off")) {
+        Elements lis = menu.getElementsByTag("li");
+        Element liStudio = null;
+        for (Element li : lis) {
+            if (li.text().toLowerCase().contains("студии")) {
+                liStudio = li;
+            }
+        }
+        if (liStudio == null || liStudio.hasClass("off")) {
             m.addNotFound(NotFound.STUDIO);
             loadCastPage(m);
         } else {
@@ -390,16 +398,16 @@ public class KinopoiskParser {
     }
 
     private void updateProgress() {
-        Platform.runLater(() -> progress.setValue(getProgress() + 1));
+        Platform.runLater(() -> progress.set(getProgress() + 1));
     }
 
     private void setCompleted(boolean value) {
-        Platform.runLater(() -> completed.setValue(value));
+        Platform.runLater(() -> completed.set(value));
     }
 
     private org.jsoup.nodes.Document getJsoupDocument(Document d) throws ParseKinopoiskException {
         String html = documentToString(d);
-        return Jsoup.parse(html, "cp1251");
+        return Jsoup.parse(html, ENCODING);
     }
 
     private String documentToString(Document doc) throws ParseKinopoiskException {
@@ -410,7 +418,7 @@ public class KinopoiskParser {
             transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");
             transformer.setOutputProperty(OutputKeys.METHOD, "html");
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty(OutputKeys.ENCODING, "cp1251");
+            transformer.setOutputProperty(OutputKeys.ENCODING, ENCODING);
 
             transformer.transform(new DOMSource(doc), new StreamResult(sw));
             return sw.toString();
@@ -458,18 +466,10 @@ public class KinopoiskParser {
     }
 
     private String encode(String p) throws UnsupportedEncodingException {
-        return URLEncoder.encode(p, "cp1251");
+        return URLEncoder.encode(p, ENCODING);
 
     }
 
-//    private void sleep(long ms) throws ParseKinopoiskException {
-//        try {
-//            Thread.sleep(ms);
-//        } catch (InterruptedException e) {
-//            LOG.warn("InterruptedException: ", e);
-//            throw new ParseKinopoiskException("Ошибка ожидания перед запросом");
-//        }
-//    }
     private static enum Status {
         NEXT, SEARCH, FILM, STUDIO, CAST;
     }
@@ -486,6 +486,7 @@ public class KinopoiskParser {
 
         @Override
         public void run() {
+            LOG.info("Timer task is run. Url - {}", url);
             kp.loadPage(url);
         }
     }
