@@ -21,11 +21,12 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 import ru.kamikadze_zm.raoreportgenerator.MainApp;
+import ru.kamikadze_zm.raoreportgenerator.settings.ServerSettings;
 import ru.kamikadze_zm.raoreportgenerator.settings.Settings;
 import ru.kamikadze_zm.raoreportgenerator.settings.StpSettings;
 
 public class SettingsController implements Initializable {
-    
+
     @FXML
     private TextField inputDir;
     @FXML
@@ -40,7 +41,8 @@ public class SettingsController implements Initializable {
     private ListView<String> lvExclusions;
     @FXML
     private TextField exclusion;
-    
+
+    //stp settings
     @FXML
     private TextField sheetIndex;
     @FXML
@@ -59,11 +61,17 @@ public class SettingsController implements Initializable {
     private TextField composerColumnIndex;
     @FXML
     private TextField durationColumnIndex;
-    
+
+    //server settings
+    @FXML
+    private TextField serverPath;
+    @FXML
+    private TextField secretKey;
+
     private final ObservableList<String> exclusions = FXCollections.observableArrayList();
-    
+
     private Settings s;
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         s = MainApp.SETTINGS;
@@ -73,21 +81,21 @@ public class SettingsController implements Initializable {
         playReportsFile.setText(s.getPlayReportsFile());
         raoFile.setText(s.getRaoFile());
         exclusions.addAll(s.getPlayReportsExclusions());
-        
+
         lvExclusions.getSelectionModel().selectedItemProperty().addListener(
                 (ObservableValue<? extends String> ov, String oldVal, String newVal) -> {
                     if (newVal != null) {
                         Platform.runLater(() -> {
                             exclusionDialog(newVal);
                             lvExclusions.getSelectionModel().clearSelection();
-                            
+
                         });
                     }
                 });
         lvExclusions.setItems(exclusions);
-        
+
         StpSettings stp = s.getStpSettings();
-        
+
         sheetIndex.setText(getIndexToInput(stp.getSheetIndex()));
         startRowIndex.setText(getIndexToInput(stp.getStartRowIndex()));
         movieNameColumnIndex.setText(getIndexToInput(stp.getMovieNameColumnIndex()));
@@ -97,37 +105,41 @@ public class SettingsController implements Initializable {
         directorColumnIndex.setText(getIndexToInput(stp.getDirectorColumnIndex()));
         composerColumnIndex.setText(getIndexToInput(stp.getComposerColumnIndex()));
         durationColumnIndex.setText(getIndexToInput(stp.getDurationColumnIndex()));
+
+        ServerSettings server = s.getServerSettings();
+        serverPath.setText(server.getServerPath());
+        secretKey.setText(server.getSecretKey());
     }
-    
+
     @FXML
     private void addExclusion(ActionEvent event) {
         exclusions.add(exclusion.getText());
         exclusion.setText("");
     }
-    
+
     private void exclusionDialog(String s) {
         Dialog<Pair<ButtonType, String>> dialog = new Dialog<>();
         dialog.setTitle("Редактирование исключения");
         dialog.setHeaderText("Редактирование исключения");
-        
+
         Label label = new Label("Исключение: ");
         TextField text = new TextField();
         text.setText(s);
-        
+
         GridPane grid = new GridPane();
         grid.add(label, 1, 1);
         grid.add(text, 2, 1);
         dialog.getDialogPane().setContent(grid);
-        
+
         ButtonType buttonTypeChange = new ButtonType("Изменить");
         ButtonType buttonTypeRemove = new ButtonType("Удалить");
         ButtonType buttonTypeCancel = new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE);
         dialog.getDialogPane().getButtonTypes().addAll(buttonTypeChange, buttonTypeRemove, buttonTypeCancel);
-        
+
         dialog.setResultConverter(button -> {
             return new Pair<>(button, text.getText());
         });
-        
+
         Optional<Pair<ButtonType, String>> result = dialog.showAndWait();
         if (result.get().getKey() == buttonTypeRemove) {
             removeExclusion(s);
@@ -142,18 +154,18 @@ public class SettingsController implements Initializable {
             dialog.close();
         }
     }
-    
+
     private void removeExclusion(String s) {
         lvExclusions.setItems(null);
         exclusions.remove(s);
         lvExclusions.setItems(exclusions);
     }
-    
+
     @FXML
     private void cancel(ActionEvent event) {
         closeWindow();
     }
-    
+
     @FXML
     private void save(ActionEvent event) {
         s.setInputDir(inputDir.getText());
@@ -162,7 +174,7 @@ public class SettingsController implements Initializable {
         s.setPlayReportsFile(playReportsFile.getText());
         s.setRaoFile(raoFile.getText());
         s.setPlayReportsExclusions(new ArrayList<>(exclusions));
-        
+
         StpSettings stpSettings = new StpSettings(
                 getIndexFromInput(sheetIndex.getText()),
                 getIndexFromInput(startRowIndex.getText()),
@@ -175,19 +187,23 @@ public class SettingsController implements Initializable {
                 getIndexFromInput(durationColumnIndex.getText())
         );
         s.setStpSettings(stpSettings);
-        MainApp.showWriteAccessMessages();
+
+        ServerSettings serverSettings = new ServerSettings(serverPath.getText().trim(), secretKey.getText().trim());
+        s.setServerSettings(serverSettings);
         
+        MainApp.showWriteAccessMessages();
+
         s.save();
         closeWindow();
     }
-    
+
     private String getIndexToInput(int index) {
         if (index != -1) {
             index += 1;
         }
         return String.valueOf(index);
     }
-    
+
     private int getIndexFromInput(String input) {
         int index = Integer.parseInt(input);
         if (index != -1) {
@@ -195,11 +211,11 @@ public class SettingsController implements Initializable {
         }
         return index;
     }
-    
+
     private void closeWindow() {
         ((Stage) outputDir.getScene().getWindow()).close();
     }
-    
+
     @FXML
     private void aboutContains(ActionEvent event) {
         MainApp.hostServices().showDocument("https://docs.oracle.com/javase/7/docs/api/java/lang/String.html#contains(java.lang.CharSequence)");

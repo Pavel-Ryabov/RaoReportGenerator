@@ -28,6 +28,8 @@ import org.jsoup.select.Elements;
 import org.w3c.dom.Document;
 import ru.kamikadze_zm.raoreportgenerator.MovieInfo;
 import ru.kamikadze_zm.raoreportgenerator.MovieInfo.NotFound;
+import ru.kamikadze_zm.raoreportgenerator.kinopoisk.remoteserver.HttpClient;
+import ru.kamikadze_zm.raoreportgenerator.kinopoisk.remoteserver.RemoteMovieInfo;
 
 public class KinopoiskParser {
 
@@ -54,6 +56,7 @@ public class KinopoiskParser {
     private final ReadOnlyBooleanWrapper completed = new ReadOnlyBooleanWrapper(false);
 
     private MovieInfo currentMovie;
+    private RemoteMovieInfo remoteMovieInfo;
     private Status status;
     private boolean russian;
 
@@ -134,11 +137,13 @@ public class KinopoiskParser {
         if (currentMovie != null) {
             TempUtil.save(currentMovie);
             LOG.info("Finish {}", currentMovie);
+            HttpClient.post(remoteMovieInfo);
         }
         if (iterator.hasNext()) {
             updateProgress();
             currentMovie = iterator.next();
             LOG.info("Start {}", currentMovie);
+            remoteMovieInfo = new RemoteMovieInfo(currentMovie.getName());
             russian = false;
             int ri = -1;
             if (!restored.isEmpty()) {
@@ -224,7 +229,8 @@ public class KinopoiskParser {
             return;
         }
 
-        org.jsoup.nodes.Document jDoc = getJsoupDocument(d);
+        String html = documentToString(d);
+        org.jsoup.nodes.Document jDoc = getJsoupDocument(html);
 
         Elements els = jDoc.getElementsByClass("moviename-big");
         Element e = els.first();
@@ -235,6 +241,10 @@ public class KinopoiskParser {
         }
 
         m.setLink(location);
+
+        remoteMovieInfo.setLinkAndId(location);
+        remoteMovieInfo.setName(name);
+        remoteMovieInfo.setMainHtml(html);
 
         Element nameHeader = jDoc.getElementById("headerFilm");
         Elements originalNameEls = nameHeader.getElementsByAttributeValue("itemprop", "alternativeHeadline");
@@ -286,7 +296,11 @@ public class KinopoiskParser {
             return;
         }
 
-        org.jsoup.nodes.Document jDoc = getJsoupDocument(d);
+        String html = documentToString(d);
+        org.jsoup.nodes.Document jDoc = getJsoupDocument(html);
+        
+        remoteMovieInfo.setStudiosHtml(html);
+        
         Element start = jDoc.getElementById("block_left");
         Element el = start.child(0);
         el = el.getElementsByTag("table").get(0);
@@ -327,7 +341,10 @@ public class KinopoiskParser {
             return;
         }
 
-        org.jsoup.nodes.Document jDoc = getJsoupDocument(d);
+        String html = documentToString(d);
+        org.jsoup.nodes.Document jDoc = getJsoupDocument(html);
+        
+        remoteMovieInfo.setCastHtml(html);
 
         Elements els = jDoc.getElementsByAttributeValue("name", "director");
         if (!els.isEmpty()) {
@@ -406,7 +423,10 @@ public class KinopoiskParser {
     }
 
     private org.jsoup.nodes.Document getJsoupDocument(Document d) throws ParseKinopoiskException {
-        String html = documentToString(d);
+        return getJsoupDocument(documentToString(d));
+    }
+
+    private org.jsoup.nodes.Document getJsoupDocument(String html) throws ParseKinopoiskException {
         return Jsoup.parse(html, ENCODING);
     }
 

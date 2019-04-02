@@ -22,7 +22,10 @@ public class Browser {
 
     private static WebEngine webEngine;
 
-    private final ReadOnlyBooleanWrapper completed = new ReadOnlyBooleanWrapper(true);
+    private final ReadOnlyBooleanWrapper completedProperty = new ReadOnlyBooleanWrapper(true);
+
+    private volatile boolean isCompleted = false;
+
     private Document document;
 
     private String currentUrl;
@@ -78,7 +81,7 @@ public class Browser {
     }
 
     public ReadOnlyBooleanWrapper completedProperty() {
-        return completed;
+        return completedProperty;
     }
 
     public Document getDocument() {
@@ -87,7 +90,8 @@ public class Browser {
 
     private void setCompleted(boolean value) {
         cancelCancellationTimer();
-        Platform.runLater(() -> completed.set(value));
+        isCompleted = value;
+        Platform.runLater(() -> completedProperty.set(value));
     }
 
     private void load(String url) {
@@ -96,7 +100,7 @@ public class Browser {
     }
 
     private void reloadPage() {
-        if (getCompleted() == true) {
+        if (isCompleted == true) {
             return;
         }
         attemptCounter++;

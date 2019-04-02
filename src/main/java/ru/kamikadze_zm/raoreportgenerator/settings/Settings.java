@@ -43,6 +43,7 @@ public class Settings implements Serializable {
     private String raoFile;
     private transient List<String> playReportsExclusions;
     private StpSettings stpSettings;
+    private ServerSettings serverSettings;
 
     public Settings() {
     }
@@ -172,6 +173,17 @@ public class Settings implements Serializable {
 
     public void setStpSettings(StpSettings stpSettings) {
         this.stpSettings = stpSettings;
+    }
+
+    public ServerSettings getServerSettings() {
+        if (serverSettings != null) {
+            return serverSettings;
+        }
+        return new ServerSettings();
+    }
+
+    public void setServerSettings(ServerSettings serverSettings) {
+        this.serverSettings = serverSettings;
     }
 
     public void save() {
