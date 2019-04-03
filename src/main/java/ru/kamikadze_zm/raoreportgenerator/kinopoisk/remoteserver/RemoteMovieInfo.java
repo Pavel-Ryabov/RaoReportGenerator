@@ -96,7 +96,7 @@ public class RemoteMovieInfo {
                 int sp = matcher.start() + 1;
                 int ep = matcher.end() - 1;
                 String idPart = link.substring(sp, ep);
-                int startId = idPart.lastIndexOf("-");
+                int startId = idPart.lastIndexOf("-") + 1;
                 return Integer.parseInt(link.substring(startId, ep));
             }
         } catch (NumberFormatException e) {
