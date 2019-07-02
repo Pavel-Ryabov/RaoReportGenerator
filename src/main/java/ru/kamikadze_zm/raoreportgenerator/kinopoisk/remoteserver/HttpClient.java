@@ -53,7 +53,7 @@ public class HttpClient {
         if (movieInfo.getId() == null) {
             return;
         }
-        LOG.info("Sending movie info, id: {}", movieInfo.getId());
+        LOG.info("Sending movie info: {}", movieInfo);
         CompletableFuture.runAsync(() -> {
             try {
                 INSTANCE.sendPost(movieInfo);

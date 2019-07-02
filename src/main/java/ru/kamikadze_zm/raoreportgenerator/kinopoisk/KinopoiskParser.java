@@ -137,7 +137,9 @@ public class KinopoiskParser {
         if (currentMovie != null) {
             TempUtil.save(currentMovie);
             LOG.info("Finish {}", currentMovie);
-            HttpClient.post(remoteMovieInfo);
+            if (remoteMovieInfo.getId() != null) {
+                HttpClient.post(remoteMovieInfo);
+            }
         }
         if (iterator.hasNext()) {
             updateProgress();
@@ -236,6 +238,9 @@ public class KinopoiskParser {
         Element e = els.first();
         String name = e.textNodes().get(0).text().trim();
 
+        if (name.isEmpty()) {
+            name = e.firstElementSibling().text().trim();
+        }
         if (!m.getName().equalsIgnoreCase(name)) {
             m.addNotFound(NotFound.CANDIDATE);
         }
@@ -298,9 +303,9 @@ public class KinopoiskParser {
 
         String html = documentToString(d);
         org.jsoup.nodes.Document jDoc = getJsoupDocument(html);
-        
+
         remoteMovieInfo.setStudiosHtml(html);
-        
+
         Element start = jDoc.getElementById("block_left");
         Element el = start.child(0);
         el = el.getElementsByTag("table").get(0);
@@ -343,7 +348,7 @@ public class KinopoiskParser {
 
         String html = documentToString(d);
         org.jsoup.nodes.Document jDoc = getJsoupDocument(html);
-        
+
         remoteMovieInfo.setCastHtml(html);
 
         Elements els = jDoc.getElementsByAttributeValue("name", "director");

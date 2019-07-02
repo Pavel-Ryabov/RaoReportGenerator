@@ -83,6 +83,11 @@ public class RemoteMovieInfo {
         this.studiosHtml = studiosHtml;
     }
 
+    @Override
+    public String toString() {
+        return "RemoteMovieInfo{" + "id=" + id + ", name=" + name + ", stpName=" + stpName + ", link=" + link + '}';
+    }
+
     private Integer getIdFromLink(String link) {
         Matcher matcher = SIMPLE_ID_PATTERN.matcher(link);
         try {
