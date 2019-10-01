@@ -17,6 +17,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
     private String notFound;
     private String link;
     private String stpName;
+    private String kinopoiskName;
 
     public MovieInfo(String name, String genre, String country, String year, String director, String composer, String duration) {
         this.name = name;
@@ -29,13 +30,13 @@ public class MovieInfo implements Comparable<MovieInfo> {
     }
 
     public MovieInfo(String name, String originalName, String genre, String country, String year, String director, String composer,
-            String studio, String duration, String releaseDateTime, String notFound, String link) {
-        this(name, genre, country, year, director, composer, studio, duration, releaseDateTime, notFound, link);
+            String studio, String duration, String releaseDateTime, String notFound, String link, String kinopoiskName) {
+        this(name, genre, country, year, director, composer, studio, duration, releaseDateTime, notFound, link, kinopoiskName);
         this.originalName = originalName;
     }
 
     public MovieInfo(String name, String genre, String country, String year, String director, String composer,
-            String studio, String duration, String releaseDateTime, String notFound, String link) {
+            String studio, String duration, String releaseDateTime, String notFound, String link, String kinopoiskName) {
         this.name = name;
         this.genre = genre;
         this.country = country;
@@ -47,6 +48,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
         this.releaseDateTime = releaseDateTime;
         this.notFound = notFound;
         this.link = link;
+        this.kinopoiskName = kinopoiskName;
     }
 
     public MovieInfo(String name, String releaseDateTime, String duration, String notFound) {
@@ -58,7 +60,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
 
     public MovieInfo copy() {
         return new MovieInfo(name, originalName, genre, country, year, director, composer,
-                studio, duration, releaseDateTime, notFound, link);
+                studio, duration, releaseDateTime, notFound, link, kinopoiskName);
     }
 
     public String getName() {
@@ -173,6 +175,14 @@ public class MovieInfo implements Comparable<MovieInfo> {
         this.stpName = stpName;
     }
 
+    public String getKinopoiskName() {
+        return kinopoiskName;
+    }
+
+    public void setKinopoiskName(String kinopoiskName) {
+        this.kinopoiskName = kinopoiskName;
+    }
+
     @Override
     public String toString() {
         return "MovieInfo{"
@@ -188,7 +198,8 @@ public class MovieInfo implements Comparable<MovieInfo> {
                 + ", releaseDateTime=" + releaseDateTime
                 + ", notFound=" + notFound
                 + ", link=" + link
-                + ", stpName=" + stpName + '}';
+                + ", stpName=" + stpName
+                + ", kinopoiskName=" + kinopoiskName + '}';
     }
 
     @Override

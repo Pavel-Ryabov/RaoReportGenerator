@@ -79,7 +79,8 @@ public class Combiner {
                 prm.getDuration().toString(),
                 dateTime,
                 mi.getNotFound(),
-                mi.getLink());
+                mi.getLink(),
+                mi.getKinopoiskName());
         cmi.setStpName(mi.getName());
         return cmi;
     }

@@ -245,6 +245,7 @@ public class KinopoiskParser {
             m.addNotFound(NotFound.CANDIDATE);
         }
 
+        m.setKinopoiskName(name);
         m.setLink(location);
 
         remoteMovieInfo.setLinkAndId(location);

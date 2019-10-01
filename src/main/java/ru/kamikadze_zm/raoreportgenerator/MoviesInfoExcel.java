@@ -73,7 +73,8 @@ public class MoviesInfoExcel {
                         row.getCell(Column.DURATION.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.DATETIME.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.NOT_FOUND.getIndex(true)).getStringCellValue(),
-                        row.getCell(Column.LINK.getIndex(true)).getStringCellValue()));
+                        row.getCell(Column.LINK.getIndex(true)).getStringCellValue(),
+                        row.getCell(Column.KINOPOISK_NAME.getIndex(true)).getStringCellValue()));
             } catch (Exception e) {
                 LOG.warn("Movies info parse exception: ", e);
             }
@@ -119,6 +120,7 @@ public class MoviesInfoExcel {
         sheet.setColumnWidth(Column.DURATION.getIndex(kinopoiskMovieInfo), Column.DURATION.getWidth());
         sheet.setColumnWidth(Column.NOT_FOUND.getIndex(kinopoiskMovieInfo), Column.NOT_FOUND.getWidth());
         sheet.setColumnWidth(Column.LINK.getIndex(kinopoiskMovieInfo), Column.LINK.getWidth());
+        sheet.setColumnWidth(Column.KINOPOISK_NAME.getIndex(kinopoiskMovieInfo), Column.KINOPOISK_NAME.getWidth());
         if (!kinopoiskMovieInfo) {
             sheet.setColumnWidth(Column.STP_NAME.getIndex(kinopoiskMovieInfo), Column.STP_NAME.getWidth());
         }
@@ -138,6 +140,7 @@ public class MoviesInfoExcel {
         headersRow.createCell(Column.DURATION.getIndex(kinopoiskMovieInfo)).setCellValue(Column.DURATION.getName());
         headersRow.createCell(Column.NOT_FOUND.getIndex(kinopoiskMovieInfo)).setCellValue(Column.NOT_FOUND.getName());
         headersRow.createCell(Column.LINK.getIndex(kinopoiskMovieInfo)).setCellValue(Column.LINK.getName());
+        headersRow.createCell(Column.KINOPOISK_NAME.getIndex(kinopoiskMovieInfo)).setCellValue(Column.KINOPOISK_NAME.getName());
         if (!kinopoiskMovieInfo) {
             headersRow.createCell(Column.STP_NAME.getIndex(kinopoiskMovieInfo)).setCellValue(Column.STP_NAME.getName());
         }
@@ -208,6 +211,10 @@ public class MoviesInfoExcel {
             }
             cell.setCellStyle(style);
 
+            cell = row.createCell(Column.KINOPOISK_NAME.getIndex(kinopoiskMovieInfo));
+            cell.setCellValue(m.getKinopoiskName());
+            cell.setCellStyle(style);
+
             if (!kinopoiskMovieInfo) {
                 cell = row.createCell(Column.STP_NAME.getIndex(kinopoiskMovieInfo));
                 cell.setCellValue(m.getStpName());
@@ -245,7 +252,8 @@ public class MoviesInfoExcel {
         DURATION(9, "Длительность", 12 * 256),
         NOT_FOUND(10, "Не найдено", 13 * 256),
         LINK(11, "Ссылка", 35 * 256),
-        STP_NAME(12, "Название в СТП сетке", 17 * 256);
+        KINOPOISK_NAME(12, "Название на кинопоиске", 17 * 256),
+        STP_NAME(13, "Название в СТП сетке", 17 * 256);
 
         private final int index;
         private final String name;
