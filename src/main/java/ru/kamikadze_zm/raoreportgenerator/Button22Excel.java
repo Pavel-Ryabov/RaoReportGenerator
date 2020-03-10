@@ -11,17 +11,23 @@ import org.apache.logging.log4j.Logger;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.kamikadze_zm.raoreportgenerator.playreports.PlayReportMovie;
+import ru.kamikadze_zm.raoreportgenerator.settings.StpSettings;
 
 public class Button22Excel {
 
     private static final Logger LOG = LogManager.getLogger(Button22Excel.class);
 
     public static List<Button22Movie> parseSTP(File file) throws ExcelException {
+        if (file == null) {
+            return Collections.emptyList();
+        }
+
         Workbook wb;
         try {
             wb = new XSSFWorkbook(file);
@@ -31,21 +37,29 @@ public class Button22Excel {
         }
 
         Sheet sheet = wb.getSheetAt(2);
+        StpSettings stpSettings = MainApp.SETTINGS.getStpSettings();
 
         List<Button22Movie> button22Movies = new ArrayList<>();
 
-        for (int i = 1; i <= sheet.getLastRowNum(); i++) {
+        for (int i = stpSettings.getStartRowIndex(); i <= sheet.getLastRowNum(); i++) {
             try {
                 Row row = sheet.getRow(i);
 
-                if (row.getCell(0).getStringCellValue().isEmpty()) {
+                String name = getStringFromCell(row.getCell(stpSettings.getMovieNameColumnIndex()));
+
+                if (name.isEmpty()) {
                     continue;
                 }
 
-                button22Movies.add(new Button22Movie(
-                        row.getCell(0).getStringCellValue(),
-                        row.getCell(5).getStringCellValue(),
-                        row.getCell(6).getStringCellValue()));
+                String director = null;
+                if (stpSettings.getDirectorColumnIndex() != -1) {
+                    director = getStringFromCell(row.getCell(stpSettings.getDirectorColumnIndex()));
+                }
+                String actors = null;
+                if (stpSettings.getActorsColumnIndex() != -1) {
+                    actors = getStringFromCell(row.getCell(stpSettings.getActorsColumnIndex()));
+                }
+                button22Movies.add(new Button22Movie(name, director, actors));
             } catch (Exception e) {
                 LOG.warn("Stp parse exception: ", e);
             }
@@ -110,7 +124,7 @@ public class Button22Excel {
     }
 
     public static void combine(List<Button22Movie> button22Movies, List<PlayReportMovie> playReportMovies, String path) throws ExcelException {
-        if (button22Movies.isEmpty() || playReportMovies.isEmpty()) {
+        if (playReportMovies.isEmpty()) {
             return;
         }
         List<Button22Movie> sortedMovies = new ArrayList<>(button22Movies);
@@ -143,5 +157,17 @@ public class Button22Excel {
         }
         Collections.sort(combined);
         save(combined, path);
+    }
+
+    private static String getStringFromCell(Cell c) {
+        if (c == null) {
+            return "";
+        }
+        CellType type = c.getCellTypeEnum();
+        if (CellType.NUMERIC == type) {
+            return String.valueOf(Double.valueOf(c.getNumericCellValue()).intValue());
+        } else {
+            return c.getStringCellValue().trim();
+        }
     }
 }

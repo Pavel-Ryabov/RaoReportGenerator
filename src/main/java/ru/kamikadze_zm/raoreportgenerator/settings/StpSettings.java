@@ -14,7 +14,7 @@ public class StpSettings implements Serializable {
     private static final int DEFAULT_COUNTRY_COLUMN_INDEX = 3;
     private static final int DEFAULT_YEAR_COLUMN_INDEX = 4;
     private static final int DEFAULT_DIRECTOR_COLUMN_INDEX = 6;
-    private static final int DEFAULT_COMPOSER_COLUMN_INDEX = 7;
+    private static final int DEFAULT_ACTORS_COLUMN_INDEX = 7;
     private static final int DEFAULT_DURATION_COLUMN_INDEX = 5;
 
     private int sheetIndex = DEFAULT_SHEET_INDEX;
@@ -24,7 +24,7 @@ public class StpSettings implements Serializable {
     private int countryColumnIndex = DEFAULT_COUNTRY_COLUMN_INDEX;
     private int yearColumnIndex = DEFAULT_YEAR_COLUMN_INDEX;
     private int directorColumnIndex = DEFAULT_DIRECTOR_COLUMN_INDEX;
-    private int composerColumnIndex = DEFAULT_COMPOSER_COLUMN_INDEX;
+    private int actorsColumnIndex = DEFAULT_ACTORS_COLUMN_INDEX;
     private int durationColumnIndex = DEFAULT_DURATION_COLUMN_INDEX;
 
     public StpSettings() {
@@ -37,7 +37,7 @@ public class StpSettings implements Serializable {
             int countryColumnIndex,
             int yearColumnIndex,
             int directorColumnIndex,
-            int composerColumnIndex,
+            int actorsColumnIndex,
             int durationColumnIndex) {
         this.sheetIndex = sheetIndex;
         this.startRowIndex = startRowIndex;
@@ -46,7 +46,7 @@ public class StpSettings implements Serializable {
         this.countryColumnIndex = countryColumnIndex;
         this.yearColumnIndex = yearColumnIndex;
         this.directorColumnIndex = directorColumnIndex;
-        this.composerColumnIndex = composerColumnIndex;
+        this.actorsColumnIndex = actorsColumnIndex;
         this.durationColumnIndex = durationColumnIndex;
     }
 
@@ -106,12 +106,12 @@ public class StpSettings implements Serializable {
         this.directorColumnIndex = directorColumnIndex;
     }
 
-    public int getComposerColumnIndex() {
-        return composerColumnIndex;
+    public int getActorsColumnIndex() {
+        return actorsColumnIndex;
     }
 
-    public void setComposerColumnIndex(int composerColumnIndex) {
-        this.composerColumnIndex = composerColumnIndex;
+    public void setActorsColumnIndex(int actorsColumnIndex) {
+        this.actorsColumnIndex = actorsColumnIndex;
     }
 
     public int getDurationColumnIndex() {

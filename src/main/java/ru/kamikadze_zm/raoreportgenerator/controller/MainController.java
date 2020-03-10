@@ -39,9 +39,6 @@ public class MainController implements Initializable {
     @FXML
     private void process(ActionEvent event) {
         File stpGrid = showFileChooser("Выберите сетку СТП", false);
-        if (stpGrid == null) {
-            MainApp.showErrorAndExit("Файл не выбран");
-        }
 
         DirectoryChooser directoryChooser = new DirectoryChooser();
         directoryChooser.setInitialDirectory(getInputDir());

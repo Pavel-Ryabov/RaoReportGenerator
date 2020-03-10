@@ -58,7 +58,7 @@ public class SettingsController implements Initializable {
     @FXML
     private TextField directorColumnIndex;
     @FXML
-    private TextField composerColumnIndex;
+    private TextField actorsColumnIndex;
     @FXML
     private TextField durationColumnIndex;
 
@@ -103,7 +103,7 @@ public class SettingsController implements Initializable {
         countryColumnIndex.setText(getIndexToInput(stp.getCountryColumnIndex()));
         yearColumnIndex.setText(getIndexToInput(stp.getYearColumnIndex()));
         directorColumnIndex.setText(getIndexToInput(stp.getDirectorColumnIndex()));
-        composerColumnIndex.setText(getIndexToInput(stp.getComposerColumnIndex()));
+        actorsColumnIndex.setText(getIndexToInput(stp.getActorsColumnIndex()));
         durationColumnIndex.setText(getIndexToInput(stp.getDurationColumnIndex()));
 
         ServerSettings server = s.getServerSettings();
@@ -183,7 +183,7 @@ public class SettingsController implements Initializable {
                 getIndexFromInput(countryColumnIndex.getText()),
                 getIndexFromInput(yearColumnIndex.getText()),
                 getIndexFromInput(directorColumnIndex.getText()),
-                getIndexFromInput(composerColumnIndex.getText()),
+                getIndexFromInput(actorsColumnIndex.getText()),
                 getIndexFromInput(durationColumnIndex.getText())
         );
         s.setStpSettings(stpSettings);
