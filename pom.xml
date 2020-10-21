@@ -4,7 +4,7 @@
 
     <groupId>ru.kamikadze_zm</groupId>
     <artifactId>RaoReportGenerator</artifactId>
-    <version>1.4-button22</version>
+    <version>1.5-button22</version>
     <packaging>jar</packaging>
 
     <name>RaoReportGenerator</name>

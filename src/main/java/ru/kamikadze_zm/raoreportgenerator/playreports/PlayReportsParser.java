@@ -169,6 +169,8 @@ public class PlayReportsParser {
             }
             LOG.info("Process play report file = {}", file.getAbsolutePath());
             NodeList items = (NodeList) this.itemExpression.evaluate(document, XPathConstants.NODESET);
+            
+            String lastMovieFileName = "";
 
             for (int i = 0; i < items.getLength(); i++) {
                 Node item = items.item(i);
@@ -207,7 +209,7 @@ public class PlayReportsParser {
                     markIn = new MarkIn(markInAttr.getNodeValue());
                 }
 
-                if ((markIn == null || markIn.getDuration() == 0) && !isExclusion(movieFile)) {
+                if ((!lastMovieFileName.equals(movieFile) || markIn == null) && !isExclusion(movieFile)) {
                     Node movieNode = (Node) this.movieExpression.evaluate(item, XPathConstants.NODE);
                     if (movieNode == null) {
                         continue;
@@ -228,6 +230,7 @@ public class PlayReportsParser {
                         PlayReportMovie cm = moviesMap.get(prm);
                         cm.addDateTime(prm.getDateTime());
                     }
+                    lastMovieFileName = movieFile;
                     LOG.info("Play report added = {}", prm);
                 }
             }

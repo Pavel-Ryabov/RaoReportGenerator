@@ -16,6 +16,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import ru.kamikadze_zm.onair.command.parameter.Duration;
 import ru.kamikadze_zm.raoreportgenerator.playreports.PlayReportMovie;
 import ru.kamikadze_zm.raoreportgenerator.settings.StpSettings;
 
@@ -59,7 +60,7 @@ public class Button22Excel {
                 if (stpSettings.getActorsColumnIndex() != -1) {
                     actors = getStringFromCell(row.getCell(stpSettings.getActorsColumnIndex()));
                 }
-                button22Movies.add(new Button22Movie(name, director, actors));
+                button22Movies.add(new Button22Movie(name, director, actors, null));
             } catch (Exception e) {
                 LOG.warn("Stp parse exception: ", e);
             }
@@ -84,9 +85,10 @@ public class Button22Excel {
         Row headersRow = sheet.createRow(0);
         headersRow.createCell(0).setCellValue("Название передачи");
         headersRow.createCell(1).setCellValue("Дата и время выхода в эфир");
-        headersRow.createCell(2).setCellValue("Режиссёр");
-        headersRow.createCell(3).setCellValue("Ведущие");
-        headersRow.createCell(4).setCellValue("Актёры");
+        headersRow.createCell(2).setCellValue("Хронометраж");
+        headersRow.createCell(3).setCellValue("Режиссёр");
+        headersRow.createCell(4).setCellValue("Ведущие");
+        headersRow.createCell(5).setCellValue("Актёры");
 
         CellStyle style = workbook.createCellStyle();
         style.setWrapText(true);
@@ -102,12 +104,16 @@ public class Button22Excel {
             cell = row.createCell(1);
             cell.setCellValue(m.getReleaseDateTime());
             cell.setCellStyle(style);
-
+            
             cell = row.createCell(2);
+            cell.setCellValue(m.getStringDuration());
+            cell.setCellStyle(style);
+
+            cell = row.createCell(3);
             cell.setCellValue(m.getDirector());
             cell.setCellStyle(style);
 
-            cell = row.createCell(4);
+            cell = row.createCell(5);
             cell.setCellValue(m.getActors());
             cell.setCellStyle(style);
 
@@ -144,14 +150,15 @@ public class Button22Excel {
                     break;
                 }
             }
+            Duration duration = prm.getDuration();
             String[] releases = prm.getDateTime().split(",");
             for (String date : releases) {
                 String trimmedDate = date.trim();
                 if (founded != null) {
                     String name = prm.getMovieName();
-                    combined.add(new Button22Movie(name, founded.getDirector(), founded.getActors(), trimmedDate));
+                    combined.add(new Button22Movie(name, founded.getDirector(), founded.getActors(), trimmedDate, duration));
                 } else {
-                    combined.add(new Button22Movie(prm.getMovieName(), "", "", trimmedDate));
+                    combined.add(new Button22Movie(prm.getMovieName(), "", "", trimmedDate, duration));
                 }
             }
         }

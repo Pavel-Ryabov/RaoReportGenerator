@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
+import ru.kamikadze_zm.onair.command.parameter.Duration;
 
 public class Button22Movie implements Comparable<Button22Movie> {
 
@@ -13,18 +14,21 @@ public class Button22Movie implements Comparable<Button22Movie> {
     private String director;
     private String actors;
     private String releaseDateTime;
+    private Duration duration;
 
-    public Button22Movie(String name, String director, String actors) {
+    public Button22Movie(String name, String director, String actors, Duration duration) {
         this.name = name;
         this.director = director;
         this.actors = actors;
+        this.duration = duration;
     }
 
-    public Button22Movie(String name, String director, String actors, String releaseDateTime) {
+    public Button22Movie(String name, String director, String actors, String releaseDateTime, Duration duration) {
         this.name = name;
         this.director = director;
         this.actors = actors;
         this.releaseDateTime = releaseDateTime;
+        this.duration = duration;
     }
 
     public String getName() {
@@ -57,6 +61,18 @@ public class Button22Movie implements Comparable<Button22Movie> {
 
     public void setReleaseDateTime(String releaseDateTime) {
         this.releaseDateTime = releaseDateTime;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+    
+    public String getStringDuration() {
+        return duration != null ? duration.toString() : "";
+    }
+
+    public void setDuration(Duration duration) {
+        this.duration = duration;
     }
 
     @Override
