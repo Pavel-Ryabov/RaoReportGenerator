@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration>
     <Properties>
-        <Property name="log-path">${sys:user.home}/documents/RaoReportGenerator/logs</Property>
+        <Property name="log-path">${sys:user.home}/Documents/RaoReportGenerator/logs</Property>
     </Properties>
     
     <Appenders>
