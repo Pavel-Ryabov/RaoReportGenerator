@@ -27,7 +27,7 @@ public class Combiner {
         Collections.sort(sortedMoviesInfo, MovieInfo::compareForCombiner);
         List<MovieInfo> combinedInfo = new ArrayList<>();
 
-        String replaceRegEx = "[ _\\-.]";
+        String replaceRegEx = "[ _\\-.,:!]";
         final String message = "Не найден в сетке СТП";
         MovieInfo founded;
         for (PlayReportMovie prm : playReportMovies) {

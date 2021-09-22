@@ -38,6 +38,7 @@ public class KinopoiskParser {
 
     private static final String HOST = "https://www.kinopoisk.ru";
     private static final String ENCODING = "UTF8";
+    private static final String URL_ENCODING = "cp1251";
 
     private static final Pattern FILM_PATTERN = Pattern.compile("film/.+|series/.+");
     private static final String CAPTCHA = "showcaptcha";
@@ -60,7 +61,7 @@ public class KinopoiskParser {
     private RemoteMovieInfo remoteMovieInfo;
     private Status status;
     private boolean russian;
-    
+
     private final Random random = new Random();
 
     public KinopoiskParser(List<MovieInfo> movies, Browser browser, List<MovieInfo> restored) {
@@ -247,6 +248,7 @@ public class KinopoiskParser {
         Elements els = jDoc.getElementsByAttributeValue("itemprop", "name");
         Element e = els.first();
         String name = e.getElementsByTag("span").first().text().trim();
+        name = name.replaceAll("\\(\\d\\d\\d\\d\\)", "").trim();
 
         if (!m.getName().equalsIgnoreCase(name)) {
             m.addNotFound(NotFound.CANDIDATE);
@@ -506,7 +508,7 @@ public class KinopoiskParser {
     }
 
     private String encode(String p) throws UnsupportedEncodingException {
-        return URLEncoder.encode(p, ENCODING);
+        return URLEncoder.encode(p, URL_ENCODING);
 
     }
 

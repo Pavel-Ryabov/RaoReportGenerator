@@ -32,10 +32,17 @@ public class Browser {
     private int attemptCounter;
     private Timer cancellationTimer;
 
-    public Browser() {
-        WebView browser = new WebView();
+    public Browser(WebView webView) {
+        WebView browser;
+        if (webView != null) {
+            browser = webView;
+        } else {
+            browser = new WebView();
+        }
+
         webEngine = browser.getEngine();
         webEngine.setUserAgent(USER_AGENT);
+        webEngine.setJavaScriptEnabled(false);
 
         webEngine.getLoadWorker().stateProperty().addListener(
                 (ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) -> {
@@ -74,6 +81,10 @@ public class Browser {
                 document = n;
             }
         });
+    }
+
+    public Browser() {
+        this(null);
     }
 
     public void loadPage(String url) throws ParseKinopoiskException {
