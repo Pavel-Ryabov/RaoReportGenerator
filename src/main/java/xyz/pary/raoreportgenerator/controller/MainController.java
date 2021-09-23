@@ -76,6 +76,24 @@ public class MainController implements Initializable {
             MainApp.showMessage("Ошибка", "Не удалось загрузить окно настроек", Alert.AlertType.ERROR);
         }
     }
+    
+    @FXML
+    private void repeatCaptcha(ActionEvent event) {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Process.fxml"));
+        try {
+            Parent root = loader.load();
+            Scene scene = new Scene(root);
+            mainStage.setTitle("Обработка");
+            mainStage.setScene(scene);
+            mainStage.setResizable(true);
+            mainStage.show();
+            loader.<ProcessController>getController()
+                    .repeatCaptcha(mainStage);
+        } catch (IOException e) {
+            LOG.warn("Load Process.fxml exception: ", e);
+            MainApp.showMessage("Ошибка", "Не удалось загрузить окно обработки", Alert.AlertType.ERROR);
+        }
+    }
 
     public void setStage(Stage mainStage) {
         this.mainStage = mainStage;

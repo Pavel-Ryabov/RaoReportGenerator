@@ -110,7 +110,7 @@ public class ProcessController implements Initializable {
             } else {
                 TempUtil.deleteTemp();
             }
-            processKinopoiskPart();
+            processKinopoiskPart(false);
         }
 
         if (playreports) {
@@ -152,15 +152,37 @@ public class ProcessController implements Initializable {
         }
     }
 
-    private void processKinopoiskPart() {
+    public void repeatCaptcha(Stage stage) {
+        this.stage = stage;
+
+        File moviesFile = showKinopoiskFileChooser();
+        if (moviesFile == null) {
+            MainApp.showErrorAndExit("Файл не выбран");
+        }
+
+        try {
+            kinopoiskMovies = MoviesInfoExcel.parse(moviesFile);
+            LOG.info("Parse kinopoisk results complete");
+            this.countFilms = kinopoiskMovies.size();
+            lblCount.setText(String.valueOf(this.countFilms));
+        } catch (ExcelException e) {
+            MainApp.showErrorAndExit(e.getMessage());
+            return;
+        }
+        Collections.sort(kinopoiskMovies);
+
+        processKinopoiskPart(true);
+    }
+
+    private void processKinopoiskPart(boolean repeatCaptcha) {
         List<MovieInfo> kinopoiskMoviesPart = getNextKinopoiskMoviesPart();
         Browser browser = new Browser();
-        KinopoiskParser kp = new KinopoiskParser(kinopoiskMoviesPart, browser, restoredFilms);
+        KinopoiskParser kp = new KinopoiskParser(kinopoiskMoviesPart, browser, restoredFilms, repeatCaptcha);
         kp.progressProperty().addListener((obs, ov, nv) -> updateProcessed(nv.intValue() - ov.intValue()));
 
         kp.completedProperty().addListener((obs, ov, nv) -> {
             if (nv == true) {
-                completeKinopoiskPart();
+                completeKinopoiskPart(repeatCaptcha);
             }
         });
 
@@ -177,11 +199,11 @@ public class ProcessController implements Initializable {
         return part;
     }
 
-    private void completeKinopoiskPart() {
+    private void completeKinopoiskPart(boolean repeatCaptcha) {
         if (lastFilmIndex >= kinopoiskMovies.size()) {
             completeKinopoisk();
         } else {
-            processKinopoiskPart();
+            processKinopoiskPart(repeatCaptcha);
         }
     }
 
@@ -209,18 +231,18 @@ public class ProcessController implements Initializable {
     private void checkDataForCombine() {
         if (combine) {
             if (!moviesInfo && !playreports) {
-                kinopoiskMoviesFile = showFileChooser("Выберите готовый файл с результатами кинопоиска");
-                playReportMoviesFile = showFileChooser("Выберите готовый файл с данными плей репортов");
+                kinopoiskMoviesFile = showKinopoiskFileChooser();
+                playReportMoviesFile = showPlayReportsFileChooser();
                 if (kinopoiskMoviesFile == null || playReportMoviesFile == null) {
                     combine = false;
                 }
             } else if (!moviesInfo) {
-                kinopoiskMoviesFile = showFileChooser("Выберите готовый файл с результатами кинопоиска");
+                kinopoiskMoviesFile = showKinopoiskFileChooser();
                 if (kinopoiskMoviesFile == null) {
                     combine = false;
                 }
             } else if (!playreports) {
-                playReportMoviesFile = showFileChooser("Выберите готовый файл с плей репортами");
+                playReportMoviesFile = showPlayReportsFileChooser();
                 if (playReportMoviesFile == null) {
                     combine = false;
                 }
@@ -235,6 +257,14 @@ public class ProcessController implements Initializable {
         FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("XLSX", "*.xlsx");
         fileChooser.getExtensionFilters().add(extFilter);
         return fileChooser.showOpenDialog(stage);
+    }
+
+    private File showKinopoiskFileChooser() {
+        return showFileChooser("Выберите готовый файл с результатами кинопоиска");
+    }
+
+    private File showPlayReportsFileChooser() {
+        return showFileChooser("Выберите готовый файл с данными плей репортов");
     }
 
     private void combine() {

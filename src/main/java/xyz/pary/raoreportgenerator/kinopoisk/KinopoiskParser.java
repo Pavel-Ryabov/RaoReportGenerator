@@ -56,6 +56,8 @@ public class KinopoiskParser {
 
     private final ReadOnlyIntegerWrapper progress = new ReadOnlyIntegerWrapper(0);
     private final ReadOnlyBooleanWrapper completed = new ReadOnlyBooleanWrapper(false);
+    
+    private final boolean repeatCaptcha;
 
     private MovieInfo currentMovie;
     private RemoteMovieInfo remoteMovieInfo;
@@ -64,7 +66,7 @@ public class KinopoiskParser {
 
     private final Random random = new Random();
 
-    public KinopoiskParser(List<MovieInfo> movies, Browser browser, List<MovieInfo> restored) {
+    public KinopoiskParser(List<MovieInfo> movies, Browser browser, List<MovieInfo> restored, boolean repeatCaptcha) {
         this.iterator = movies.iterator();
         this.browser = browser;
         if (restored != null) {
@@ -72,6 +74,7 @@ public class KinopoiskParser {
         } else {
             this.restored = Collections.emptyList();
         }
+        this.repeatCaptcha = repeatCaptcha;
 
         this.browser.completedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue == true) {
@@ -150,6 +153,15 @@ public class KinopoiskParser {
             currentMovie = iterator.next();
             LOG.info("Start {}", currentMovie);
             remoteMovieInfo = new RemoteMovieInfo(currentMovie.getName());
+            if (repeatCaptcha && !currentMovie.getNotFound().contains(NotFound.CAPTCHA.getMessage())) {
+                LOG.info("Skip {}", currentMovie);
+                status = Status.NEXT;
+                nextStep();
+                return;
+            }
+            if (repeatCaptcha) {
+                currentMovie.setNotFound(null);
+            }
             russian = false;
             int ri = -1;
             if (!restored.isEmpty()) {

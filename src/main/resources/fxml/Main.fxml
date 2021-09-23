@@ -1,18 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.pary.raoreportgenerator.controller.MainController">
+<AnchorPane id="AnchorPane" minHeight="-Infinity" minWidth="-Infinity" prefHeight="226.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="xyz.pary.raoreportgenerator.controller.MainController">
    <children>
-      <Button alignment="CENTER" layoutX="216.0" layoutY="302.0" mnemonicParsing="false" onAction="#openSettings" text="Настройки" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="155.0" />
-      <Button alignment="CENTER" layoutX="216.0" layoutY="141.0" mnemonicParsing="false" onAction="#process" prefHeight="31.0" prefWidth="168.0" text="Обработать" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
+      <Button alignment="CENTER" layoutX="216.0" layoutY="302.0" mnemonicParsing="false" onAction="#openSettings" text="Настройки" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="150.0" />
+      <Button alignment="CENTER" layoutX="216.0" layoutY="141.0" mnemonicParsing="false" onAction="#process" text="Обработать" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="115.0" />
       <CheckBox fx:id="cbMoviesInfo" alignment="CENTER" layoutX="292.0" layoutY="159.0" mnemonicParsing="false" selected="true" text="Обработать СТП сетку" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
       <CheckBox fx:id="cbPlayreports" alignment="CENTER" layoutX="10.0" layoutY="195.0" mnemonicParsing="false" selected="true" text="Обработать play reports" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
       <CheckBox fx:id="cbCombine" alignment="CENTER" layoutX="292.0" layoutY="231.0" mnemonicParsing="false" selected="true" text="Объединить таблицы" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
       <CheckBox fx:id="cbRestore" layoutX="290.0" layoutY="10.0" mnemonicParsing="false" selected="true" text="Восстановить" visible="false" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <Button alignment="CENTER" layoutX="10.0" layoutY="193.0" mnemonicParsing="false" onAction="#repeatCaptcha" text="Повторить капчу" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="185.0" />
    </children>
 </AnchorPane>
