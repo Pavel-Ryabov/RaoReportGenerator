@@ -66,7 +66,7 @@ public class MoviesInfoExcel {
                         row.getCell(Column.ORIGINAL_NAME.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.GENRE.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.COUNTRY.getIndex(true)).getStringCellValue(),
-                        row.getCell(Column.YEAR.getIndex(true)).getStringCellValue(),
+                        getStringValue(row.getCell(Column.YEAR.getIndex(true))),
                         row.getCell(Column.DIRECTOR.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.COMPOSER.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.STUDIO.getIndex(true)).getStringCellValue(),
@@ -237,6 +237,19 @@ public class MoviesInfoExcel {
             }
             throw new ExcelException(message);
         }
+    }
+
+    private static String getStringValue(Cell c) {
+        return switch (c.getCellTypeEnum()) {
+            case BLANK, STRING ->
+                c.getStringCellValue();
+            case BOOLEAN ->
+                String.valueOf(c.getBooleanCellValue());
+            case NUMERIC ->
+                String.valueOf((int) c.getNumericCellValue());
+            default ->
+                "";
+        };
     }
 
     private static enum Column {
