@@ -74,7 +74,8 @@ public class MoviesInfoExcel {
                         row.getCell(Column.DATETIME.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.NOT_FOUND.getIndex(true)).getStringCellValue(),
                         row.getCell(Column.LINK.getIndex(true)).getStringCellValue(),
-                        row.getCell(Column.KINOPOISK_NAME.getIndex(true)).getStringCellValue()));
+                        row.getCell(Column.KINOPOISK_NAME.getIndex(true)).getStringCellValue(),
+                        getStringValue(row.getCell(Column.CAPTCHA_STEP.getIndex(true)))));
             } catch (Exception e) {
                 LOG.warn("Movies info parse exception: ", e);
             }
@@ -143,6 +144,9 @@ public class MoviesInfoExcel {
         headersRow.createCell(Column.KINOPOISK_NAME.getIndex(kinopoiskMovieInfo)).setCellValue(Column.KINOPOISK_NAME.getName());
         if (!kinopoiskMovieInfo) {
             headersRow.createCell(Column.STP_NAME.getIndex(kinopoiskMovieInfo)).setCellValue(Column.STP_NAME.getName());
+        }
+        if (kinopoiskMovieInfo) {
+            headersRow.createCell(Column.CAPTCHA_STEP.getIndex(kinopoiskMovieInfo)).setCellValue(Column.CAPTCHA_STEP.getName());
         }
 
         CellStyle style = workbook.createCellStyle();
@@ -220,12 +224,18 @@ public class MoviesInfoExcel {
                 cell.setCellValue(m.getStpName());
                 cell.setCellStyle(style);
             }
+            
+            if (kinopoiskMovieInfo) {
+                cell = row.createCell(Column.CAPTCHA_STEP.getIndex(kinopoiskMovieInfo));
+                cell.setCellValue(m.getCaptchaStep());
+                cell.setCellStyle(style);
+            }
 
             rowCount++;
         }
 
         File outFile = new File(filePath);
-        try (FileOutputStream out = new FileOutputStream(outFile)) {
+        try ( FileOutputStream out = new FileOutputStream(outFile)) {
             workbook.write(out);
         } catch (Exception e) {
             LOG.warn("Save movies info to Excel exception: ", e);
@@ -240,6 +250,9 @@ public class MoviesInfoExcel {
     }
 
     private static String getStringValue(Cell c) {
+        if (c == null) {
+            return "";
+        }
         return switch (c.getCellTypeEnum()) {
             case BLANK, STRING ->
                 c.getStringCellValue();
@@ -266,7 +279,8 @@ public class MoviesInfoExcel {
         NOT_FOUND(10, "Не найдено", 13 * 256),
         LINK(11, "Ссылка", 35 * 256),
         KINOPOISK_NAME(12, "Название на кинопоиске", 17 * 256),
-        STP_NAME(13, "Название в СТП сетке", 17 * 256);
+        STP_NAME(13, "Название в СТП сетке", 17 * 256),
+        CAPTCHA_STEP(14, "Шаг с капчой", 8 * 256);
 
         private final int index;
         private final String name;

@@ -12,6 +12,7 @@
       <CheckBox fx:id="cbPlayreports" alignment="CENTER" layoutX="10.0" layoutY="195.0" mnemonicParsing="false" selected="true" text="Обработать play reports" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="45.0" />
       <CheckBox fx:id="cbCombine" alignment="CENTER" layoutX="292.0" layoutY="231.0" mnemonicParsing="false" selected="true" text="Объединить таблицы" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="80.0" />
       <CheckBox fx:id="cbRestore" layoutX="290.0" layoutY="10.0" mnemonicParsing="false" selected="true" text="Восстановить" visible="false" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <Button alignment="CENTER" layoutX="10.0" layoutY="193.0" mnemonicParsing="false" onAction="#repeatCaptcha" text="Повторить капчу" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="185.0" />
+      <Button alignment="CENTER" layoutX="10.0" layoutY="193.0" mnemonicParsing="false" onAction="#repeatCaptcha" text="Повторить капчу" textAlignment="CENTER" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="185.0" />
+      <CheckBox fx:id="cbShowCaptcha" layoutX="258.0" layoutY="189.0" mnemonicParsing="false" text="Показывать капчу" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="189.0" />
    </children>
 </AnchorPane>

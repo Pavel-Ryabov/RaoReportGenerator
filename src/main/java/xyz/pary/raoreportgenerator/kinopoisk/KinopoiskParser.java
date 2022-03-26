@@ -56,8 +56,9 @@ public class KinopoiskParser {
 
     private final ReadOnlyIntegerWrapper progress = new ReadOnlyIntegerWrapper(0);
     private final ReadOnlyBooleanWrapper completed = new ReadOnlyBooleanWrapper(false);
-    
+
     private final boolean repeatCaptcha;
+    private final boolean showCaptcha;
 
     private MovieInfo currentMovie;
     private RemoteMovieInfo remoteMovieInfo;
@@ -66,7 +67,7 @@ public class KinopoiskParser {
 
     private final Random random = new Random();
 
-    public KinopoiskParser(List<MovieInfo> movies, Browser browser, List<MovieInfo> restored, boolean repeatCaptcha) {
+    public KinopoiskParser(List<MovieInfo> movies, Browser browser, List<MovieInfo> restored, boolean repeatCaptcha, boolean showCaptcha) {
         this.iterator = movies.iterator();
         this.browser = browser;
         if (restored != null) {
@@ -75,12 +76,16 @@ public class KinopoiskParser {
             this.restored = Collections.emptyList();
         }
         this.repeatCaptcha = repeatCaptcha;
+        this.showCaptcha = showCaptcha;
 
         this.browser.completedProperty().addListener((ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) -> {
             if (newValue == true) {
                 if (this.browser.getDocument() == null) {
                     currentMovie.addNotFound(NotFound.ERROR);
                     status = Status.NEXT;
+                }
+                if (showCaptcha) {
+                    browser.closeWindow();
                 }
                 nextStep();
             }
@@ -110,6 +115,9 @@ public class KinopoiskParser {
     }
 
     private void nextStep() {
+        if (browser.windowIsOpen()) {
+            return;
+        }
         try {
             switch (status) {
                 case NEXT:
@@ -161,6 +169,21 @@ public class KinopoiskParser {
             }
             if (repeatCaptcha) {
                 currentMovie.setNotFound(null);
+                if (currentMovie.getCaptchaStep() != null && currentMovie.getLink() != null) {
+                    status = Status.valueOf(currentMovie.getCaptchaStep());
+                    currentMovie.setCaptchaStep(null);
+                    switch (status) {
+                        case FILM:
+                            loadFilmPage(null, currentMovie);
+                            return;
+                        case STUDIO:
+                            loadStudioPage(currentMovie);
+                            return;
+                        case CAST:
+                            loadCastPage(currentMovie);
+                            return;
+                    }
+                }
             }
             russian = false;
             int ri = -1;
@@ -226,23 +249,27 @@ public class KinopoiskParser {
     }
 
     private void loadFilmPage(Document d, MovieInfo m) throws ParseKinopoiskException {
-        org.jsoup.nodes.Document jDoc = getJsoupDocument(d);
+        if (m.getLink() == null) {
+            org.jsoup.nodes.Document jDoc = getJsoupDocument(d);
 
-        Elements els = jDoc.getElementsByClass("element most_wanted");
-        if (els == null || els.isEmpty()) {
-            m.addNotFound(NotFound.MOVIE);
-            loadNextMovie();
-            return;
-        }
-        Element name = els.get(0).getElementsByClass("name").get(0);
-        Element link = name.getElementsByTag("a").get(0);
+            Elements els = jDoc.getElementsByClass("element most_wanted");
+            if (els == null || els.isEmpty()) {
+                m.addNotFound(NotFound.MOVIE);
+                loadNextMovie();
+                return;
+            }
+            Element name = els.get(0).getElementsByClass("name").get(0);
+            Element link = name.getElementsByTag("a").get(0);
 
-        status = Status.FILM;
-        String url = link.attr("data-url");
-        if (!url.endsWith("/")) {
-            url += "/";
+            status = Status.FILM;
+            String url = link.attr("data-url");
+            if (!url.endsWith("/")) {
+                url += "/";
+            }
+            waitAndLoadPage(HOST + url, 20000);
+        } else {
+            waitAndLoadPage(m.getLink(), 20000);
         }
-        waitAndLoadPage(HOST + url, 20000);
         LOG.info("Film");
     }
 
@@ -511,10 +538,16 @@ public class KinopoiskParser {
 
     private boolean checkCaptcha(String location, MovieInfo m) {
         if (location.contains(CAPTCHA)) {
-            LOG.warn("CAPCHA " + location + "   " + m);
-            m.addNotFound(NotFound.CAPTCHA);
-            status = Status.NEXT;
-            return true;
+            if (showCaptcha) {
+                browser.openWindow("Капча");
+                return true;
+            } else {
+                LOG.warn("CAPCHA " + location + "   " + m);
+                m.addNotFound(NotFound.CAPTCHA);
+                m.setCaptchaStep(status.name());
+                status = Status.NEXT;
+                return true;
+            }
         }
         return false;
     }
@@ -525,7 +558,7 @@ public class KinopoiskParser {
     }
 
     private static enum Status {
-        NEXT, SEARCH, FILM, STUDIO, CAST;
+        NEXT, SEARCH, FILM, STUDIO, CAST, CAPTCHA;
     }
 
     private class WaitingTask extends TimerTask {

@@ -110,7 +110,7 @@ public class ProcessController implements Initializable {
             } else {
                 TempUtil.deleteTemp();
             }
-            processKinopoiskPart(false);
+            processKinopoiskPart(false, false);
         }
 
         if (playreports) {
@@ -152,7 +152,7 @@ public class ProcessController implements Initializable {
         }
     }
 
-    public void repeatCaptcha(Stage stage) {
+    public void repeatCaptcha(Stage stage, boolean showCaptcha) {
         this.stage = stage;
 
         File moviesFile = showKinopoiskFileChooser();
@@ -171,18 +171,18 @@ public class ProcessController implements Initializable {
         }
         Collections.sort(kinopoiskMovies);
 
-        processKinopoiskPart(true);
+        processKinopoiskPart(true, showCaptcha);
     }
 
-    private void processKinopoiskPart(boolean repeatCaptcha) {
+    private void processKinopoiskPart(boolean repeatCaptcha, boolean showCaptcha) {
         List<MovieInfo> kinopoiskMoviesPart = getNextKinopoiskMoviesPart();
         Browser browser = new Browser();
-        KinopoiskParser kp = new KinopoiskParser(kinopoiskMoviesPart, browser, restoredFilms, repeatCaptcha);
+        KinopoiskParser kp = new KinopoiskParser(kinopoiskMoviesPart, browser, restoredFilms, repeatCaptcha, showCaptcha);
         kp.progressProperty().addListener((obs, ov, nv) -> updateProcessed(nv.intValue() - ov.intValue()));
 
         kp.completedProperty().addListener((obs, ov, nv) -> {
             if (nv == true) {
-                completeKinopoiskPart(repeatCaptcha);
+                completeKinopoiskPart(repeatCaptcha, showCaptcha);
             }
         });
 
@@ -199,11 +199,11 @@ public class ProcessController implements Initializable {
         return part;
     }
 
-    private void completeKinopoiskPart(boolean repeatCaptcha) {
+    private void completeKinopoiskPart(boolean repeatCaptcha, boolean showCaptcha) {
         if (lastFilmIndex >= kinopoiskMovies.size()) {
             completeKinopoisk();
         } else {
-            processKinopoiskPart(repeatCaptcha);
+            processKinopoiskPart(repeatCaptcha, showCaptcha);
         }
     }
 

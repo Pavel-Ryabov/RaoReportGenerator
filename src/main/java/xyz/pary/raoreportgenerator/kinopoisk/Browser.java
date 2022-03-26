@@ -6,8 +6,11 @@ import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyBooleanWrapper;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
@@ -15,12 +18,15 @@ import org.w3c.dom.Document;
 public class Browser {
 
     private static final Logger LOG = LogManager.getLogger(Browser.class);
-    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.101 Safari/537.36";
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36";
     //private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.99 Safari/537.36";
     //private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36";
     //private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; rv:54.0) Gecko/20100101 Firefox/54.0";
 
-    private static WebEngine webEngine;
+    private static final String WINDOW_TITLE = "Окно браузера";
+
+    private final WebView browser;
+    private final Stage window;
 
     private final ReadOnlyBooleanWrapper completedProperty = new ReadOnlyBooleanWrapper(true);
 
@@ -33,14 +39,17 @@ public class Browser {
     private Timer cancellationTimer;
 
     public Browser(WebView webView) {
-        WebView browser;
         if (webView != null) {
             browser = webView;
         } else {
             browser = new WebView();
         }
 
-        webEngine = browser.getEngine();
+        window = new Stage();
+        window.setTitle(WINDOW_TITLE);
+        window.setScene(new Scene(new VBox(browser), 800, 600));
+
+        WebEngine webEngine = browser.getEngine();
         webEngine.setUserAgent(USER_AGENT);
         webEngine.setJavaScriptEnabled(false);
 
@@ -48,6 +57,10 @@ public class Browser {
                 (ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) -> {
 
                     switch (newValue) {
+                        case SCHEDULED: {
+                            setCompleted(false);
+                            break;
+                        }
                         case SUCCEEDED:
                             if (webEngine.getDocument() != null) {
                                 document = webEngine.getDocument();
@@ -99,6 +112,20 @@ public class Browser {
         load(url);
     }
 
+    public void openWindow(String title) {
+        window.setTitle(title);
+        window.show();
+    }
+
+    public void closeWindow() {
+        window.setTitle(WINDOW_TITLE);
+        window.hide();
+    }
+
+    public boolean windowIsOpen() {
+        return window.isShowing();
+    }
+
     public boolean getCompleted() {
         return completedProperty().get();
     }
@@ -112,13 +139,15 @@ public class Browser {
     }
 
     private void setCompleted(boolean value) {
-        cancelCancellationTimer();
+        if (value) {
+            cancelCancellationTimer();
+        }
         isCompleted = value;
         Platform.runLater(() -> completedProperty.set(value));
     }
 
     private void load(String url) {
-        Platform.runLater(() -> webEngine.load(url));
+        Platform.runLater(() -> browser.getEngine().load(url));
         startCancellationTimer();
     }
 
@@ -133,7 +162,7 @@ public class Browser {
 
     private void startCancellationTimer() {
         cancellationTimer = new Timer(true);
-        cancellationTimer.schedule(new CancellationTask(webEngine.getLoadWorker()), 120000);
+        cancellationTimer.schedule(new CancellationTask(browser.getEngine().getLoadWorker()), 120000);
         LOG.info("Cancellation timer started");
     }
 

@@ -32,6 +32,8 @@ public class MainController implements Initializable {
     private CheckBox cbPlayreports;
     @FXML
     private CheckBox cbCombine;
+    @FXML
+    private CheckBox cbShowCaptcha;
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -88,7 +90,7 @@ public class MainController implements Initializable {
             mainStage.setResizable(true);
             mainStage.show();
             loader.<ProcessController>getController()
-                    .repeatCaptcha(mainStage);
+                    .repeatCaptcha(mainStage, cbShowCaptcha.isSelected());
         } catch (IOException e) {
             LOG.warn("Load Process.fxml exception: ", e);
             MainApp.showMessage("Ошибка", "Не удалось загрузить окно обработки", Alert.AlertType.ERROR);

@@ -18,6 +18,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
     private String link;
     private String stpName;
     private String kinopoiskName;
+    private String captchaStep;
 
     public MovieInfo(String name, String genre, String country, String year, String director, String composer, String duration) {
         this.name = name;
@@ -30,9 +31,10 @@ public class MovieInfo implements Comparable<MovieInfo> {
     }
 
     public MovieInfo(String name, String originalName, String genre, String country, String year, String director, String composer,
-            String studio, String duration, String releaseDateTime, String notFound, String link, String kinopoiskName) {
+            String studio, String duration, String releaseDateTime, String notFound, String link, String kinopoiskName, String captchaStep) {
         this(name, genre, country, year, director, composer, studio, duration, releaseDateTime, notFound, link, kinopoiskName);
         this.originalName = originalName;
+        this.captchaStep = captchaStep;
     }
 
     public MovieInfo(String name, String genre, String country, String year, String director, String composer,
@@ -60,7 +62,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
 
     public MovieInfo copy() {
         return new MovieInfo(name, originalName, genre, country, year, director, composer,
-                studio, duration, releaseDateTime, notFound, link, kinopoiskName);
+                studio, duration, releaseDateTime, notFound, link, kinopoiskName, captchaStep);
     }
 
     public String getName() {
@@ -160,7 +162,7 @@ public class MovieInfo implements Comparable<MovieInfo> {
     }
 
     public String getLink() {
-        return link;
+        return link != null && link.isEmpty() ? null : link;
     }
 
     public void setLink(String link) {
@@ -183,6 +185,14 @@ public class MovieInfo implements Comparable<MovieInfo> {
         this.kinopoiskName = kinopoiskName;
     }
 
+    public String getCaptchaStep() {
+        return captchaStep != null && captchaStep.isEmpty() ? null : captchaStep;
+    }
+
+    public void setCaptchaStep(String captchaStep) {
+        this.captchaStep = captchaStep;
+    }
+
     @Override
     public String toString() {
         return "MovieInfo{"
@@ -199,7 +209,8 @@ public class MovieInfo implements Comparable<MovieInfo> {
                 + ", notFound=" + notFound
                 + ", link=" + link
                 + ", stpName=" + stpName
-                + ", kinopoiskName=" + kinopoiskName + '}';
+                + ", kinopoiskName=" + kinopoiskName
+                + ", captchaStep=" + captchaStep + '}';
     }
 
     @Override
