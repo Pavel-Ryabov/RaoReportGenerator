@@ -65,7 +65,7 @@ public class Browser {
                             if (webEngine.getDocument() != null) {
                                 document = webEngine.getDocument();
                             } else {
-                                System.out.println(webEngine.executeScript("document.documentElement.innerHTML"));
+                                LOG.info("Document is null. " + webEngine.executeScript("document.documentElement.innerHTML"));
                             }
                             LOG.info("Page loaded");
                             setCompleted(true);
@@ -73,7 +73,13 @@ public class Browser {
                         case FAILED:
                             LOG.info("Page load failed");
                             document = null;
-                            setCompleted(true);
+                            if (attemptCounter < 3) {
+                                attemptCounter++;
+                                webEngine.reload();
+                            } else {
+                                attemptCounter = 0;
+                                setCompleted(true);
+                            }
                             break;
                         case CANCELLED:
                             LOG.info("Page load cancelled");
@@ -89,11 +95,19 @@ public class Browser {
                     }
                 });
 
+        webEngine.getLoadWorker().exceptionProperty().addListener(
+                (observable, oldEx, newEx) -> {
+                    if (newEx != null) {
+                        LOG.warn("Web Engine Exception: ", newEx);
+                    }
+                });
+
         webEngine.documentProperty().addListener((v, o, n) -> {
             if (n != null) {
                 document = n;
             }
         });
+
     }
 
     public Browser() {
@@ -101,12 +115,18 @@ public class Browser {
     }
 
     public void loadPage(String url) throws ParseKinopoiskException {
+        loadPage(url, true);
+    }
+
+    public void loadPage(String url, boolean saveUrl) throws ParseKinopoiskException {
         if (!getCompleted()) {
             throw new ParseKinopoiskException("Не загружена предыдущая страница");
         }
         setCompleted(false);
         document = null;
-        currentUrl = url;
+        if (saveUrl) {
+            currentUrl = url;
+        }
         attemptCounter = 0;
         LOG.info("Page load - {}", url);
         load(url);

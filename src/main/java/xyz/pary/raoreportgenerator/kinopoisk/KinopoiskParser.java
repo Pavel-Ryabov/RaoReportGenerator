@@ -539,6 +539,9 @@ public class KinopoiskParser {
     private boolean checkCaptcha(String location, MovieInfo m) {
         if (location.contains(CAPTCHA)) {
             if (showCaptcha) {
+                if (location.startsWith("http:")) {
+                    browser.loadPage("https" + location.substring(4), false);
+                }
                 browser.openWindow("Капча");
                 return true;
             } else {
