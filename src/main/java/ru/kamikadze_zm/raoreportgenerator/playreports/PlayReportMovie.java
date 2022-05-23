@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.Objects;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import ru.kamikadze_zm.onair.command.parameter.Duration;
+import xyz.pary.onair.command.parameter.Duration;
 
 public class PlayReportMovie implements Comparable<PlayReportMovie> {
 

@@ -4,7 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
-import ru.kamikadze_zm.onair.command.parameter.Duration;
+import xyz.pary.onair.command.parameter.Duration;
 
 public class Button22Movie implements Comparable<Button22Movie> {
 

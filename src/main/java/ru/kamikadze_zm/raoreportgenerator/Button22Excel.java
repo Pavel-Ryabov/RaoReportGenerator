@@ -16,9 +16,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import ru.kamikadze_zm.onair.command.parameter.Duration;
 import ru.kamikadze_zm.raoreportgenerator.playreports.PlayReportMovie;
 import ru.kamikadze_zm.raoreportgenerator.settings.StpSettings;
+import xyz.pary.onair.command.parameter.Duration;
 
 public class Button22Excel {
 

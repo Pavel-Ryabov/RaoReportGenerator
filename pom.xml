@@ -12,6 +12,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>ru.kamikadze_zm.raoreportgenerator.MainApp</mainClass>
+        <launcherClass>ru.kamikadze_zm.raoreportgenerator.Launcher</launcherClass>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
 
     <organization>
@@ -20,6 +23,27 @@
     </organization>
     
     <dependencies>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-controls</artifactId>
+            <version>17.0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-fxml</artifactId>
+            <version>17.0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-web</artifactId>
+            <version>17.0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-media</artifactId>
+            <version>17.0.0.1</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
@@ -43,9 +67,9 @@
         </dependency>
         
         <dependency>
-            <groupId>ru.kamikadze_zm</groupId>
+            <groupId>xyz.pary</groupId>
             <artifactId>onair-parser</artifactId>
-            <version>0.4.3</version>
+            <version>0.6</version>
         </dependency>
 
         <dependency>
@@ -64,84 +88,59 @@
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.1.1</version>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <release>${maven.compiler.release}</release>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.openjfx</groupId>
+                <artifactId>javafx-maven-plugin</artifactId>
+                <version>0.0.6</version>
+                <configuration>
+                    <mainClass>${mainClass}</mainClass>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>unpack-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>unpack-dependencies</goal>
-                        </goals>
+                        <id>default-cli</id>
                         <configuration>
-                            <excludeScope>system</excludeScope>
-                            <excludeGroupIds>junit,org.mockito,org.hamcrest</excludeGroupIds>
-                            <outputDirectory>${project.build.directory}/classes</outputDirectory>
+                            <mainClass>${mainClass}</mainClass>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>debug</id>
+                        <configuration>
+                            <options>
+                                <option>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
+                            </options>
+                            <mainClass>${mainClass}</mainClass>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.6.0</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
                 <executions>
                     <execution>
-                        <id>unpack-dependencies</id>
-                        
                         <phase>package</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>shade</goal>
                         </goals>
                         <configuration>
-                            <executable>${java.home}/../bin/javafxpackager</executable>
-                            <arguments>
-                                <argument>-createjar</argument>
-                                <argument>-nocss2bin</argument>
-                                <argument>-appclass</argument>
-                                <argument>${mainClass}</argument>
-                                <argument>-srcdir</argument>
-                                <argument>${project.build.directory}/classes</argument>
-                                <argument>-outdir</argument>
-                                <argument>${project.build.directory}</argument>
-                                <argument>-outfile</argument>
-                                <argument>${project.build.finalName}.jar</argument>
-                            </arguments>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                            <shadedClassifierName>project-classifier</shadedClassifierName>
+                            <outputFile>shade\${project.artifactId}-${project.version}.jar</outputFile>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>${launcherClass}</mainClass>
+                                </transformer>
+                            </transformers>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>default-cli</id>
-                        <goals>
-                            <goal>exec</goal>                            
-                        </goals>
-                        <configuration>
-                            <executable>${java.home}/bin/java</executable>
-                            <commandlineArgs>${runfx.args}</commandlineArgs>
-                        </configuration>
-                    </execution>
-                </executions>  
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <compilerArguments>
-                        <bootclasspath>${sun.boot.class.path}${path.separator}${java.home}/lib/jfxrt.jar</bootclasspath>
-                    </compilerArguments>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.22.0</version>
-                <configuration>
-                    <additionalClasspathElements>
-                        <additionalClasspathElement>${java.home}/lib/jfxrt.jar</additionalClasspathElement>
-                    </additionalClasspathElements>
-                </configuration>
+                </executions>
             </plugin>
         </plugins>
     </build>

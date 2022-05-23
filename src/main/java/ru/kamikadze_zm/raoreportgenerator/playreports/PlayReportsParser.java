@@ -39,8 +39,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-import ru.kamikadze_zm.onair.command.parameter.Duration;
-import ru.kamikadze_zm.onair.command.parameter.MarkIn;
+import xyz.pary.onair.command.parameter.Duration;
+import xyz.pary.onair.command.parameter.MarkIn;
 import ru.kamikadze_zm.raoreportgenerator.MainApp;
 
 public class PlayReportsParser {
@@ -209,7 +209,7 @@ public class PlayReportsParser {
                     markIn = new MarkIn(markInAttr.getNodeValue());
                 }
 
-                if ((!lastMovieFileName.equals(movieFile) || markIn == null) && !isExclusion(movieFile)) {
+                if (!isExclusion(movieFile)) {
                     Node movieNode = (Node) this.movieExpression.evaluate(item, XPathConstants.NODE);
                     if (movieNode == null) {
                         continue;

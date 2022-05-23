@@ -12,9 +12,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import ru.kamikadze_zm.onair.command.parameter.Duration;
 import ru.kamikadze_zm.raoreportgenerator.ExcelException;
 import ru.kamikadze_zm.raoreportgenerator.MainApp;
+import xyz.pary.onair.command.parameter.Duration;
 
 public class ExcelPlayReports {
 
@@ -87,15 +87,17 @@ public class ExcelPlayReports {
 
         for (PlayReportMovie m : movies) {
             try {
-                Row row = sheet.createRow(rowCount);
-                row.createCell(MOVIE_NAME_COLUMN_INDEX).setCellValue(m.getMovieName());
-                row.createCell(DATETIME_COLUMN_INDEX).setCellValue(m.getDateTime());
-                String dur = m.getDuration().toString();
-                if (dur.lastIndexOf(".") != -1) {
-                    dur = dur.substring(0, dur.lastIndexOf("."));
+                for (String dt : m.getDateTime().split(",")) {
+                    Row row = sheet.createRow(rowCount);
+                    row.createCell(MOVIE_NAME_COLUMN_INDEX).setCellValue(m.getMovieName());
+                    row.createCell(DATETIME_COLUMN_INDEX).setCellValue(dt);
+                    String dur = m.getDuration().toString();
+                    if (dur.lastIndexOf(".") != -1) {
+                        dur = dur.substring(0, dur.lastIndexOf("."));
+                    }
+                    row.createCell(DURATION_COLUMN_INDEX).setCellValue(dur);
+                    rowCount++;
                 }
-                row.createCell(DURATION_COLUMN_INDEX).setCellValue(dur);
-                rowCount++;
             } catch (Exception e) {
                 LOG.warn("Cannot write " + m.toString() + " to excel:", e);
                 throw new ExcelException("Произошла критическая ошибка");
@@ -107,7 +109,7 @@ public class ExcelPlayReports {
         sheet.autoSizeColumn(DURATION_COLUMN_INDEX);
 
         File outFile = new File(MainApp.SETTINGS.getPlayReportsPath());
-        try (FileOutputStream out = new FileOutputStream(outFile)) {
+        try ( FileOutputStream out = new FileOutputStream(outFile)) {
             workbook.write(out);
         } catch (Exception e) {
             LOG.error("Save play reports to Excel exception: ", e);
